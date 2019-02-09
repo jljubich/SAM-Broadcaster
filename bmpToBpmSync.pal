@@ -1,0 +1,17 @@
+// bmpToBpmSync.pal
+// This PAL copies current BMP values (stored in samdb's 'xfade' field) to the deprecated BPM ones
+// Use it under your entire responsibility
+// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Enjoy!
+
+PAL.LockExecution;
+
+ExecSQL('SET sql_mode = "" ', []);
+
+ExecSQL('UPDATE songlist SET bpm = 0 ', []);
+
+ExecSQL('UPDATE songlist SET bpm = cast(replace(xfade, &bmp="", "") AS integer) WHERE cast(replace(xfade, "&bmp=", "") AS integer) <> bpm AND xfade <> "" ', []);
+
+ExecSQL('UPDATE songlist SET xfade=concat("&bmp=", bpm, ",00") WHERE bpm <> 0 ', []);
+
+PAL.UnlockExecution;

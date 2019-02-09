@@ -1,0 +1,31 @@
+// fadeToNext.pal
+// This PAL fades currently being played song to the next one in queue each 30 sec.
+// Use it under your entire responsibility
+// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Enjoy!
+
+var Song : TSongInfo;
+var A, I, Q : TPlayer;
+var vol : Integer;
+
+PAL.Loop := True;
+
+A := ActivePlayer;
+I := IdlePlayer;
+
+Song := Queue.NextInQueue;
+
+I.QueueSong(Song);
+Q := QueuedPlayer;
+vol := Q.Volume;
+Q.Volume := vol / 5;
+Q.SeekTime(60000);
+A.FadeToNext;
+PAL.WaitForTime('+00:00:01');
+Q.Volume := vol / 2;
+PAL.WaitForTime('+00:00:01');
+Q.Volume := vol;
+
+// queue.clear;
+
+PAL.WaitForTime('+00:00:30');

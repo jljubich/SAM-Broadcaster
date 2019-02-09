@@ -1,0 +1,37 @@
+// categories.pal
+// This PAL lists the categories in which the song that is currently being played is located
+// Use it under your entire responsibility
+// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Enjoy!
+
+var Q : TDataSet;
+var sCat : String;
+
+PAL.LockExecution;
+
+Q := Query('SELECT DISTINCT c.name FROM category c, categorylist cl ' +
+           'WHERE cl.categoryID = c.ID ' +
+           'AND c.ID NOT IN ' +
+           '(SELECT parentID FROM category) ' +
+           'AND cl.songID IN ' +
+           '(SELECT songID FROM historylist ' +
+           'WHERE date_played IN ' +
+           '(SELECT max(date_played) ' +
+           'FROM historylist)) ' +
+           'ORDER BY c.name',[],True);
+
+if Q.IsEmpty then
+  sCat := 'Track currently being played does not belong to any category!'
+else begin
+  sCat := 'Track currently being played belongs to the following categories:' + #13#10;
+  Q.First;
+  while not Q.EOF do
+  begin
+    sCat := sCat + Q['name'] + #13#10;
+    Q.Next;
+  end;
+end;
+
+InformationDlg(sCat);
+
+PAL.UnlockExecution;

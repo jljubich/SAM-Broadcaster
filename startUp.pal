@@ -1,0 +1,9 @@
+// startUp.pal
+// This PAL clears the queue
+// Use it under your entire responsibility
+// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Enjoy!
+
+PAL.LockExecution;
+Queue.Clear;
+PAL.UnlockExecution;

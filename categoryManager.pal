@@ -1,0 +1,25 @@
+// categoryManager.pal
+// This PAL moves (not copies) songs from any source to a determined in "[category]:moveTo" destination category with same parent category.
+// For example: Songs in "Pop" category (and every other category withing the same parent one) are moved to "Rock" category when added to "Rock:moveTo" category, again, all of them, withing the same parent category. 
+// ADDED: It also removes songs from a determined in "[category]:removeTo" destination category.
+// For example: Songs in "Pop:removeFrom" category are removed from "Pop" category.
+// Use it under your entire responsibility
+// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Enjoy!
+
+var sSQL : String;
+
+//PAL.Loop := True;
+
+PAL.LockExecution;
+
+sSQL := 'UPDATE categorylist dest, (SELECT cl.songID, c2.ID AS destCategoryID, c.parentID FROM categorylist cl, category c, category c2 WHERE cl.categoryID = c.ID AND c.name LIKE "%:moveTo" AND c2.name = replace(c.name,":moveTo","") ) ori SET dest.categoryID = ori.destCategoryID WHERE dest.songID = ori.songID AND dest.categoryID IN (SELECT ID FROM category WHERE parentID = ori.parentID)';
+
+ExecSQL(sSQL, []);
+
+sSQL := 'DELETE FROM categorylist USING categorylist, (SELECT c2.ID destCatID, a.destSongID destSongId FROM category c2, (SELECT c.name srcCatName, REPLACE(c.name,":removeFrom","") destCatName, cl.songID destSongID FROM category c, categorylist cl WHERE c.name LIKE "%:removeFrom" AND c.ID = cl.categoryID ORDER BY c.name) a WHERE c2.name = a.srcCatName OR c2.name = a.destCatName ORDER BY c2.name) b WHERE categoryID = b.destCatID AND songID = b.destSongID';
+
+ExecSQL(sSQL, []);
+
+PAL.UnlockExecution;
+
