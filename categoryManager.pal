@@ -4,7 +4,7 @@
 // ADDED: It also removes songs from a determined in "[category]:removeTo" destination category.
 // For example: Songs in "Pop:removeFrom" category are removed from "Pop" category.
 // Use it under your entire responsibility
-// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Please donate to Paypal's jljubich @ outlook.com if it was useful to you
 // Enjoy!
 
 var sSQL : String;

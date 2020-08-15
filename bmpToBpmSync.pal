@@ -1,7 +1,7 @@
 // bmpToBpmSync.pal
 // This PAL copies current BMP values (stored in samdb's 'xfade' field) to the deprecated BPM ones
 // Use it under your entire responsibility
-// Please donate to Paypal's jorge @ ljubich.com.ar if it was useful to you
+// Please donate to Paypal's jljubich @ outlook.com if it was useful to you
 // Enjoy!
 
 PAL.LockExecution;
