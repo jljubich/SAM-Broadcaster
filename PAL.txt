@@ -1,0 +1,413 @@
+DRAFT spec document for final Documentation
+Complete PAL class, variable, function & contants list for SAMv2.5.6 RC2
+
+More documentation is available at:
+http://www.dwscript.com/libdocu/LibDocu.html
+Please not that not all of these units are available in PAL.
+
+
+Unit: Classes
+=============
+
+const
+ {Used in TStringList.Duplicates}
+ dupIgnore = 0;
+ dupError  = 1;
+ dupAccept = 2;
+
+TList = class
+ constructor Create;
+ destructor Destroy;
+ function Add(Obj : TObject):Integer;
+ procedure Insert(Index : Integer; Obj : TObject);
+ function Count : Integer;
+ procedure Delete(Index : Integer);
+ function IndexOfObj : TObject):Integer;
+ function Remove(Obj : TObject):Integer;
+ procedure Clear;
+ function GetItems(Index : Integer):TObject;
+ procedure SetItems(Index : Integer; Value : TObject);
+ property Items[x : Integer]: TObject read GetItems write SetItems; Default;
+end;
+
+TStrings = class
+ constructor Create;
+ destructor Destroy;
+ function Add(Str : String):Integer;
+ function Get(Index : Integer):String;
+ function IndexOf(Str : String):Integer;
+ function IndexOfName(Str : String):Integer;
+ procedure Insert(Index : Integer; Str : String);
+ procedure Clear;
+ function GetText : String;
+ function SetText(Value : String);
+ function GetCount:Integer;
+ function GetCommaText : String;
+ function SetCommaText(Value : String):String;
+ procedure LoadFromFile(Filename : String);
+ procedure SaveToFile(Filename : String);
+ procedure Delete(Index : Integer);
+ procedure Exchange(Index1 : Integer; Index2 : Integer);
+ procedure Move(CurIndex : Integer; NewIndex : Integer);
+ procedure AddStrings(Strings : TStringList);
+ function AddObject(S : String; AObject : TObject): Integer;
+ procedure InsertObject(Index : Integer; S : String; AObject : TObject);
+ function IndexOfObject(AObject : TObject):Integer;
+ function GetNames(Index : Integer):String;
+ function GetStrings(Index : Integer):String;
+ procedure SetStrings(Index : Integer; Value : String)
+ function GetObjects(Index : Integer):TObjects;
+ procedue SetObjects(Index : Integer; Value : TObject);
+ function GetValues(Str : String):String;
+ procedure SetValues(Str : String; Value : String);
+
+ property Text  : Integer read GetTExt write SetText;
+ property Count : Integer read GetCount;
+ property CommaText: String read GetCommaText write SetCommaText;
+ property Strings[x : Integer]: String read GetStrings write SetStrings; default;
+ property Objects[x:Integer]: TObject read GetObjects write SetObjects;
+ property Names[s : String]: String read GetNames;
+ property Values[s : String]: String read GetValues write SetValues;
+end;
+
+TStringList = class(TStrings)
+ procedure Sort;
+ function Find(S : String; var Index : Integer):Boolean;
+ function GetDuplicates : Integer;
+ procedure SetDuplicates(Value : Integer);
+ function GetSorted : Boolean;
+ procedure SetSorted(Value : Boolean);
+
+ property Duplicates : Integer read GetDuplicates write SetDuplicates;
+ property Sorted: Boolean read GetSorted write SetSorted;
+end;
+
+THashTable = class
+  function Size : Integer;
+  function Capacity : Integer;
+end;
+
+TIntegerHashTable = class(THashTable)
+ constructor Create;
+ destructor Destroy;
+ procedure Put(Key : Integer; Value : TObject);
+ function Get(Key : Integer):TObject;
+ function HasKey(Key : Integer):Boolean;
+ function RemoveKey(Key : Integer):TObject;
+end;
+
+TStringHastTable = class(THashTable)
+ constructor Create;
+ destructor Destroy;
+ procedure Put(Key : String; Value : TObject);
+ function Get(Key : String):TObject;
+ function HasKey(Key : String):Boolean;
+ function RemoveKey(Key : String):TObject;
+end;
+
+TStack = class
+ constructor Create;
+ destructor Destroy;
+ procedure Push(Obj : TObject);
+ function Pop:TObject;
+ function Peek:TObject;
+ function Count : Integer; 
+end;
+
+TQueueList = class
+ constructor Create;
+ destructor Destroy;
+ procedure Push(Obj : TObject);
+ function Pop:TObject;
+ function Peek:TObject;
+ function Count:Integer;
+end;
+
+#################################################
+
+
+Unit: unFileUtils
+=================
+function FileToStr(Filename : String):String;
+function StrToFile(Filename : String; Data : String):Boolean;
+procedure WebToFile(Filename : String; URL : String);
+function WebToStr(URL : String):String;
+
+
+#################################################
+
+
+Unit: unGlobal
+==============
+
+const
+ Sunday     = 1;
+ Monday     = 2;
+ Tuesday    = 3;
+ Wednessday = 4;
+ Thursday   = 5;
+ Friday     = 6;
+ Saturday   = 7;
+ 
+
+var T : TTimeObj;
+
+TDynVarArray = Array of Variant;
+
+TTimeObj = class
+ function GetTime(Mask : String): DateTime;
+
+ property TimeMask[Mask : String]: DateTime read GetTime; default;
+end;
+
+procedure Write(Msg : Variant);
+procedure WriteLn(Msg : Variant);
+
+
+#################################################
+
+
+Unit: unPAL
+===========
+
+var PAL : TPal;
+
+TPal = class
+ function GetLoop : Boolean;
+ procedure SetLoop(Value : Boolean);
+ procedure LoadScript(Filename : String); {Not implemented}
+ procedure LockExecution;
+ procedure UnlockExecution;
+ procedure WaitForQueue(Count : Integer);
+ procedure WaitForTime(Time : TDateTime);
+ procedure WaitForPlayCount(Count : Integer);
+ procedure WaitForEvent; {Not implemented}
+ function GetMemoryLeakWarning: Boolean;
+ procedure SetMemoryLeakWarning(Value : Boolean);
+
+ property Loop : Boolean read GetLoop write SetLoop;
+ property MemoryLeakWarning : Boolean read GetMemoryLeakWarning write SetMemoryLeakWarning;
+end;
+
+
+
+#################################################
+
+
+Unit: unPlayer
+==============
+
+var DeckA   : TPlayer;
+var DeckB   : TPlayer;
+var VoiceFX : TPlayer;
+var SoundFX : TPlayer;
+
+const
+ psPlaying = 0; {Used in TPlayer.Status}
+ psReady   = 1;
+ psQueued  = 2;
+
+TPlayer = class
+ procedure Play;
+ procedure Pause;
+ procedure Stop;
+ procedure Next;
+ procedure Eject;
+ function Seek(Time : Integer):Integer;
+ function GetStatus:Integer;
+ procedure SetVolume(Value : Integer);
+ function GetVolume:Integer;
+ function GetCurTime:Integer;
+ function GetDuration:Integer;
+ procedure FadeToStop;
+ procedure FadeToPlay;
+ function GetSongInfo : TSongInfo;
+ function QueueSong(Song : TSongInfo):Boolean;
+
+ property Volume : Integer read GetVolume write SetVolume;
+ property CurTime : Integer read GetCurTime;
+ property Duration : Integer read GetDuration;
+ property Status : Integer read GetStatus;
+end;
+
+
+
+#################################################
+
+
+
+Unit: unQueue
+==============
+
+var Queue : TQueue;
+
+TQueue = class
+
+  procedure Add(Song : TSongInfo; InsertPos : Integer);
+  procedure AddFile(Filename : String; InsertPos : Integer);
+  procedure AddURL(URL : String; InsertPos : Integer);
+  procedure AddList(Playlist : String; InsertPos : Integer);
+  procedure AddDir(Dir : String; SubDir : Boolean; InsertPos : Integer);
+
+  function IsEmpty:Boolean;
+
+  procedure Shuffle;
+  procedure Clear;
+  procedure Delete(QueueID : Integer);
+
+  function NextInQueue:TSongInfo;
+  function SongList:TDataSet;
+
+  property Count : Integer; {readonly}
+  property ETA : DateTime; {readonly}
+  property Duration : Integer; {readonly}
+
+end;
+
+
+
+
+
+#################################################
+
+
+
+Unit: unCategoryTree
+====================
+
+var Cat    : TCategoryTree;
+var Dir    : TDirTree;
+var SubDir : TDirTree;
+
+TCategoryTree = class
+  property Categories[Name : String] : TCategory; {default}
+end;
+
+TDirTree = class
+  property DirCategories[Path : String] : TDirCategory; {default}
+end;
+
+
+#################################################
+
+
+
+Unit: unCategory
+================
+
+TCategory
+  procedure QueueBottom(SelectMethod : TSelectMethod; EnforceRules : Boolean);
+  procedure QueueTop(SelectMethod : TSelectMethod; EnforceRules : Boolean);
+  function ChooseSong(SelectMethod : TSelectMethod; EnforceRules : Boolean):TSongInfo;
+
+  property Name : String; {readonly}
+end;
+
+TDirCategory
+  procedure QueueBottom(SelectMethod : TSelectMethod; EnforceRules : Boolean);
+  procedure QueueTop(SelectMethod : TSelectMethod; EnforceRules : Boolean);
+  function  ChooseSong(SelectMethod : TSelectMethod; EnforceRules : Boolean):TSongInfo;
+
+  procedure Rescan;
+
+  property Path : String; {readonly}
+  property SubDir : Boolean; {readonly}
+end;
+
+
+#################################################
+
+
+
+Unit: unPlaylistTools
+=====================
+
+function ExtractRandom(Filename : String):String; {Extracts a random track from a playlist file (M3U, PLS, ASX)}
+procedure LoadPlayList(Filename : String; FileList : TStringList);
+
+TSelectMethod = integer
+ (
+   smWeighted      = 0, //Song with lowest balance
+   smPriority      = 1, //Song with highest priority
+   smRandom        = 2, //Totally random selection
+   smMRP           = 3, //Most recently played song
+   smLRP           = 4, //Least recently played song
+   smMRPA,         = 5, //Most recently played artist
+   smLRPA          = 6, //Least recently played artist
+   smLemmingLogic  = 7  //Random logic chooser
+ ) 
+
+EnforceRules = True
+NoRules = False
+
+TInsertPos = integer
+(
+  ipTop    = 0
+  ipBottom = 1
+)
+
+
+#################################################
+
+
+
+Unit: unSongInfo
+================
+
+var CurSong = TSongInfo; {Variable pointing to last song played inside SAM2}
+
+TSongInfo = class
+  property Values[Name : String] : Variant; {default}
+end;
+
+
+
+#################################################
+
+
+
+Unit: unDataSet
+===============
+
+function Query(Sql : String; Params : Array of Variant; ReadOnly : Boolean):TDataSet;
+fucntion ExecSQL(SQL : String; Params : Array of Variant):Integer;
+
+TDataSet = class
+
+  procedure Next;
+  procedure First;
+  procedure Last;
+  procedure Previous;
+  procedure Post;
+  procedure Cancel;
+  procedue Insert;
+  procedure Append;
+  function BOF:Boolean;
+  function EOF:Boolean;
+
+  property Values[Fieldname : String] : Variant; {default}
+end;
+
+
+
+#################################################
+
+Unit: unPlaylistControl
+====================
+
+var RequestPolicy : TRequestPolicy;
+
+TRequestPolicy= class
+    property Enabled       : Boolean;
+    property InsertPos     : Integer;
+    property ArtistRule    : Boolean;
+    property SongRule      : Boolean;
+    property DelayTime     : Integer;
+    property Limit         : Integer;
+    property LimitInterval : Integer;
+    property DailyLimit    : Integer;
+end;
+
+
+
+#################################################

@@ -1,0 +1,4603 @@
+PAL Quick Start Guide
+
+Overview:
+PAL is short for Playlist Automation Language and was developed to give station owners full power over their music rotation.  The goal was that for anything a station playlist programmer could dream up - PAL would be able to achieve it.  Today hundreds of SAM Broadcaster users use the power of PAL to completely automate major functions of their station, including switching DJ's, running two-for-Tuesday, hourly news, precise scheduled jingles and advertisements and even downloading content into their rotation.
+
+In this document we aim to quickly teach you the basics of PAL scripting and provide enough real-world examples to get you started.  At first PAL scripting might seem very daunting to any new user, but just stick with it for a while and you will quickly realize the power you can wield in automating your daily tasks. It is certainly worth the sweat and tears after you have overcome the initial learning curve.  And if you get stuck, the online forums are a great place to get help - as long as you do not expect anybody to write your complete PAL script for you! You should always post your script and then ask specific questions on what you need help with.
+
+This guide is not a replacement for the general SAM Help and PAL documentation! They should always be used as reference for more detail.
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/
+http://www.spacialaudio.com/products/sambroadcaster/help/pal/
+
+Section 1 - The PAL Basic Language
+
+The basics
+How to create a PAL script:
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/PAL_Scripting____Hello_World__Example.htm
+PAL Scripting - "Hello World" Example
+Step 1: In SAM3 go to the menu option Menu->Window->PAL scripts and activate the PAL script window.
+Step 2: Click on the Add ("+") button. This will open the script options dialog.
+Step 3: Next to the script source file, click on browse ("folder") button located to the right of the edit field. Enter the name of the script you want to load, or, if the script does not exist, the name of the script to create. For this example, it is "Guide.PAL". Click OK. (If prompted to create the file, select yes...)
+Step 4: The Guide.PAL script entry will appear inside the PAL Scripts window. Double-click on the Guide.PAL entry to open up the PAL IDE. 
+Step 5: Inside the PAL IDE type the following text:
+WriteLn('Hello world!');
+Step 6: Click on the Run button (or press [F9] ).
+The BLUE line shows which line is being executed, and the output is written on the right hand side of the PAL IDE. (It will show "Hello world!".) The status of the script in the status bar will also be displayed in the PAL IDE.
+Congratulations!  You have just entered the awesome world of radio automation scripting!    
+The PAL scripting language was based on PASCAL, to be more exact, the OOP version of Pascal called Delphi.  Delphi is the powerful object orientated programming language that was used to develop SAM Broadcaster. Thus it was only fitting to base PAL around this powerful language.
+
+The basic structure of this language will be explored in the sections to follow and will form the basic building blocks of our more advanced PAL scripts.  Note: Before we continue here you must already know how to create a blank PAL script. See the "PAL scripting: Hello world example" above.
+
+Comments
+Comments are text added to a script that is totally ignored by the compiler. This is used to provide more information to any human script viewer to make it easier to read and understand the logic of the script.
+PAL supports two different comment styles:
+
+{ This is a comment }
+// This is another comment
+
+Be on the lookout for these in the sections that follow!
+
+Output Window
+While developing PAL scripts, you will find the PAL IDE very useful. It shows you the exact line that is currently executing. However, many times you need to know what is going on in the actual script. Since the PAL IDE does not support variable inspection you should use the age-old technique of writing the current state of affairs to the output window.
+
+There are two simple commands for doing this:
+WriteLn(Value);
+WriteStr(Value);
+
+The only difference between the two is that the WriteLn command will append a newline character at the end of the string, causing the string to wrap into a new line in the output window.
+
+Compare:
+var T : Integer;
+for T := 1 to 3  do
+ WriteLn('WriteLn '+IntToStr(T));
+
+for T := 1 to 3 do
+ WriteStr('WriteStr '+IntToStr(T));
+
+Variables & Constants
+Variables and constants are used to give a name to a certain data value.  Constant values can not change during the operation of the script.  Variables however can be changed at any time during the script.  Unlike most languages, the name of the constant or variable is not case sensitive. Thus to PAL MyVar and MYvar is one and the same thing.
+
+Constant values are declared as:
+const MyConstValue = ConstValue;
+
+Examples:
+const Val1 = 'This is a string value';
+const Val2 = 1234; 
+const Val3 = 1.234;
+const Val4 = false;
+
+Varibles are declared as:
+var MyVarName : vartype = default value;
+
+Examples:
+var Val1 : String = 'This is a string value';
+var Val2 : Integer = 1234;
+var Val3 : Float = 1.234;
+var Val4 : String;
+
+As you can see, a default value is not required for variables, but it is recommended you use one where possible.  The PAL language supports all major variable types like string, integer, float, boolean, variant and datetime.  Variables can also be arrays and objects.   Variables can get a new value during the life of a script. Let’s look at this example:
+
+var S : Integer = 0;
+
+PAL.Loop := True;
+WriteLn(S);
+S := S + 1;
+WriteLn(S);
+S := 123;
+WriteLn(S);
+
+PAL.WaitForTime('+00:00:10');
+
+In the example above, the initial value of S is zero (0), and then the value is set to S + 1, which is 1+1 = 2.  Finally, S is set to 123, and then we wait for 10 seconds before the script is restarted.
+Each time the script restarts, the variables are cleared. Thus S will have the value of 0 again once the script restarts.
+
+Math
+
+Basic integer math
+var m : integer;
+{Note: a & b below are both of type integer}
+m := a + b;
+m := a - b;
+m := a * b;
+m := a div b; {Integer only; Discards remainder}
+m := a mod b; Integer only; Only remainder}
+m := -m;
+
+Basic float math
+var m : float;
+{Note: a & b below can be either of type integer or float}
+m := a + b;
+m := a - b;
+m := a * b;
+m := a / b; {Float only}
+m := -m;
+
+Some other popular math functions:
+m := Round(1.2345); {Rounds value to closest integer value)
+m := Random; {Returns random floating point value}
+
+Some other math functions to check out:
+function Sin(a : Float):Float;
+function Sinh(a : Float):Float;
+function Cos(a : Float):Float;
+function Cosh(a : Float):Float;
+function Tan(a : Float):Float;
+function Tanh(a : Float):Float;
+function ArcSin(a : Float):Float;
+function ArcSinh(a : Float):Float;
+function ArcCos(a : Float):Float;
+function ArcCosh(a : Float):Float;
+function ArcTan(a : Float):Float;
+function ArcTanh(a : Float):Float;
+function Cotan(a : Float):Float;
+function Hypot(x : Float; y : Float):Float;
+
+function Inc(var a : Integer; b : Integer):Float;
+function Abs(a : Float):Float;
+function Exp(a : Float):Float;
+function Ln(a : Float):Float;
+function Log2(a : Float):Float;
+function Log10(a : Float):Float;
+function LogN(n : Float; x : Float):Float;
+
+function Sqrt(v : Float):Float;
+function Sqr(v : Float):Float;
+function Int(v : Float):Float;
+function Frac(v : Float):Float;
+function Trunc(v : Float):Float;
+function Round(v : Float):Float;
+function Power(base : Float; exponent : Float):Float;
+
+function DegToRad(v : Float):Float;
+function RadToDeg(v : Float):Float;
+function Max(v1 : Float; v2 : Float):Float;
+function Min(v1 : Float; v2 : Float):Float;
+function Pi:Float;
+function Random:Float;
+function RandomInt(Range : Integer):Integer;
+procedure Randomize;
+
+function RandG(mean : Float; stdDev : Float):Float;
+function RandSeed:Integer;
+function SetRandSeed(Seed:Integer);
+
+String handling
+Detailed string handling is a bit beyond the scope of this document, but I will introduce a few basic techniques quickly.
+
+Var S1 : String = 'This is my first string';
+Var S2 : String = 'Another string';
+Var I : Integer;
+S2 := S1; {Copy a string}
+S2 := S1 + ' and it rocks'; {Combine strings}
+S2 := Copy(S1,2,3); {Copy only certain characters to a string. (Copy 3 characters, starting at position 2)
+WriteLn(S2);
+
+I := Length(S2); {Set I to the number of characters that S2 contains}
+I := Pos('my',S1); {Find the index of the first match}
+
+Some other string functions to check out:
+function IntToStr(v : Integer):String;
+function StrToInt(str : String):Integer;
+function StrToIntDef(str : String; Def : Integer):Integer;
+function IntToHex(v : Integer; Digits : Integer):Integer;
+function FloatToStr(v : Float):String;
+function StrToFloat(str : String):Float;
+function StrToFloatDef(str : String; Def :Float):Float;
+function Chr(x : Integer):String;
+function Ord(s : String):String; 
+function CharAt(s : String; x : Integer):String;
+procedure SetCharAt(var S : String; x : Integer; c : String);
+procedure Delete(var S : String; Index : Integer; Len : Integer);
+procedure Insert(src : String; var Dest : String; Index : Integer);
+function LowerCase(Str : String):String;
+function AnsiLowerCase(Str : String):String;
+function UpperCase(Str : String):String;
+function AnsiUpperCase(Str : String):String;
+function Pos(SubStr : String; Str : string):Integer;
+function Length(Str : String):Integer;
+function TrimLeft(Str : String):String;
+function TrimRight(Str : String):String;
+function Trim(Str : String):String;
+function CompareText(Str1 : String; Str2 : String):Integer;
+function AnsiCompareText(Str1 : String; Str2 : String):Integer;
+function CompareStr(Str1 : String; Str2 : String):Integer;
+function AnsiCompareStr(Str1 : String; Str2 : String):Integer;
+function IsDelimiter(delims : String; s : String; Index : Integer):Boolean;
+function LastDelimiter(delims : String; s : String):Boolean;
+function QuotedStr(Str : String):String;
+
+Time handling
+For radio stations time is usually very important. PAL contains a lot of features that helps programmers to deal with time.
+
+The basic time variable type is DateTime
+var D : DateTime;
+
+With this format the date and time is represented as a floating point value.  The integral part of a DateTime value is the number of days that have passed since 12/30/1899. The fractional part of a TDateTime value is fraction of a 24 hour day that has elapsed. 
+
+Following are some examples of TDateTime values and their corresponding dates and times:
+
+0	12/30/1899 12:00 am
+2.75	1/1/1900 6:00 pm
+-1.25	12/29/1899 6:00 am
+35065	1/1/1996 12:00 am
+
+Example statements:
+
+D := Now; {Current date/time}
+D := Date; {Today, with the fraction part 0}
+D := Time; {The time only, the integral part is 0}
+D := Now - 1; {Yesterday, this exact time}
+D := Now + (1/24); {One hour from now}
+
+PAL also has a very useful date mask function called T
+These are explained very well in the documentation and examples:
+http://www.spacialaudio.com/products/sambroadcaster/help/pal/hs4020.htm
+
+The TimeMask property is used to generate a DateTime value.
+The Mask can be in several formats.
+
+Standard time
+HH:MM:SS
+Mask must be in 24 hour format and contain all fields (HH, MM and SS - where HH is hours, MM is minutes and SS is seconds)
+Example T['14:00:00'] would generate a DateTime value of exactly 2pm today.
+
+Time calculation
++HH:MM:SS
+-HH:MM:SS
+Examples
+T['+00:00:30'] generates a time exactly 30 seconds from the current date and time.
+T['-01:00:00'] generates a time exactly 1 hour earlier.
+
+Next Time (Wildcards)
+XX:MM:SS
+HH:XX:SS
+HH:MM:XX  
+XX acts as a wildcard, where the mask will try and find the next time that fits in the mask.
+For example lets assume the current time is 2:05pm and we use XX:00:00 as our mask.  The resulting time will be 3:00pm because that’s the closest time in the future that fits the mask with wildcards.
+
+Next Time (Fixed)
+NEXTHOUR  
+NEXT60  Both returns the next hour after the current time. (Same as using  XX:00:00)
+
+NEXTHALFHOUR
+NEXT30   Both returns the next half hour after the current time. 
+For example if the current time is 2:15pm then using NEXT30 will result in 2:30pm.  If the time was 2:50pm, then using NEXT30 would return 3:00pm.
+NEXTQUARTER
+NEXT15 Both will return the next quarter after the current time.  For example using the NEXT15 mask at 2:05pm will return 2:15pm
+
+TimeMask property example
+Writes the result of certain time masks to the output window.
+
+
+WriteLn('--Standard time');
+WriteLn(T['14:00:00']);             {## 2PM today}
+WriteLn(T['04:30:00']);             {## 4:30AM today}
+WriteLn(DateTime(T['09:00:00']-1)); {## 9AM YESTERDAY}
+WriteLn(DateTime(T['09:00:00']+1)); {## 9AM TOMORROW}
+
+WriteLn('--Calculation');
+WriteLn(T['+01:00:00']);  {## One hour from now}
+WriteLn(T['-00:00:30']);  {## 30seconds back}
+
+WriteLn(T['NEXT60']);    {## Next hour}
+WriteLn(T['NEXT30']);     {## Next halfhour}
+WriteLn(T['NEXT15']);     {## Next quarter}
+
+WriteLn('--WildCards');
+WriteLn(T['XX:00:00']);   {## Same as Next Hour}
+WriteLn(T['XX:59:30']);   {## 30 seconds after next minute of the hour}
+WriteLn(T['XX:XX:30']);   {## Next :30 seconds}
+
+http://www.spacialaudio.com/products/sambroadcaster/help/pal/hs4022.htm
+
+
+Few quick examples:
+D := T['13:00:00']; {1pm today}
+D := T['+00:00:10']; {10 seconds from now}
+D := 1 + T['+00:00:10']; {Tomorrow, 10 seconds from now}
+
+Decoding the date into its multiple parts:
+var y,m,d : Integer;
+var hh,mm,ss,ms : Integer;
+var D : DateTime;
+
+D := Now;
+DecodeDate(D,y,m,d);
+DecodeTime(D,hh,mm,ss,ms);
+
+DayOfWeek function:
+if DayOfWeek(Now) = Sunday then {Do stuff};
+The days of the week are stored in constant values you can use. Sunday = 1 to Saturday = 7.
+
+Some other time functions to check out:
+function Now: DateTime;
+function Date: DateTime;
+function Time: DateTime;
+function DateTimeToStr(dt: DateTime):string;
+function StrToDateTime(str : String): DateTime;
+function DateToStr(Date: DateTime):String	;
+function StrToDate(Str : String): DateTime;
+function TimeToStr(Time : DateTime):String;
+function StrToTime(Str : String): DateTime;
+function DayOfWeek(dt : DateTime):Integer;
+function FormatDateTime(Format : String; dt : DateTime):String;
+function IsLeapYear(Year : Integer):Boolean;
+function IncMonth(dt : DateTime; nm : Integer):DateTime;
+procedure DecodeDate(dt : DateTime; var yy,mm,dd : Integer);
+function EncodeDate(yy, mm, dd : Integer):DateTime;
+procedure DecodeTime(dt : DateTime; var hh, mm, ss, ms : Integer);
+function EncodeTime(hh, mm, ss, ms : Integer):DateTime;
+
+Decision making & selection
+PAL scripts can compare values and act upon these results. The basic operators are:
+= - Equal to
+<> - Not equal to
+<= - Equal to, or less that
+>= - Equal, or Greater than
+NOT - Not value  
+AND - BOTH expressions must be true
+OR - ANY expression can be true
+( ) {Only used to logically group multiple expressions}
+
+All of these are called logical or "boolean" operators, since the final result is always TRUE or FALSE.
+For example:
+Var B : Boolean;
+Var X : Integer = 0;
+Var Y : Integer = 1;
+Var Z : Integer = 2;
+
+B := X<0; {B=FALSE}
+B := X = 0; {B=TRUE}
+B := Z>Y; {B=TRUE}
+B := NOT(X > 0); {B=TRUE}
+B := (X<0) OR (X=0); {B=TRUE since X=0}
+B := (X<0) AND (X=0); {B=FALSE}
+B := (X<=0); {B=TRUE}
+B := NOT B; {Changes value from true to false, or false to true}
+B := (X<>Z); {B=TRUE, since X is not equal to Z}
+
+B := (1+1); {Invalid!! Not boolean result}
+
+Logical expressions can be used in IF or CASE statements (see directly below), or REPEAT..UNTIL and WHILE..DO loops. (See Loops & Iterations section)
+
+Very important note: Due to implementation problems, you can not do PAL.WaitForXXX within an IF statement block. This will be discussed later.
+
+Basic selection logic
+The IF..THEN logic block is used to specify what sections of code need to be executed depending on a logic expression.
+
+Examples:
+IF DayOfWeek(Now) = Sunday THEN
+ WriteLn('Today is Sunday!')
+ELSE
+ WriteLn('Today is not Sunday...');
+
+IF (Now>T['14:30:00') AND (DayOfWeek(Now)=Saturday) THEN
+ WriteLn('It is time for my Saturday live show!');
+
+IF (Now>T['14:30:00') AND (DayOfWeek(Now)=Saturday) THEN
+ BEGIN
+   WriteLn('It is time for my Saturday live show!');
+   WriteLn('so lets get going...');
+ END;
+
+Sometimes you have to check many values at the same time. You can use nested IF statements, for example:
+
+IF (A = 1) THEN
+ BEGIN
+   {Do  stuff}
+   {And some more}
+ END
+ELSE IF (A = 2) THEN
+  {Do stuff}
+ELSE 
+ {Do other stuff};
+
+But using CASE statements are usually a more elegant solution:
+
+CASE A OF
+  1 : begin
+         {Do stuff}
+         {And some more}
+       end;
+  2 : {Do stuff};
+ else {Do other stuff}
+END;
+
+A needs to be an ordinal expression or a string expression.  Ordinal expressions are data values in a range, i.e. integer & boolean are ordinal values, float is not.
+
+Example of a string CASE statement:
+var A : String = 'ABC';
+CASE A OF
+  'ABC' : WriteLn('This is our ABCs');
+  'XYZ'  : WriteLn('This is our XYZs');
+END;
+
+Loops & Iteration
+In programming one often find the need to repeat certain commands a number of times until a certain condition is met.  PAL scripts contain a few basic ways to achieve this.
+
+a) Firstly, the script itself can repeat.
+By setting 
+PAL.Loop := True;
+the whole script will repeat once it has reached the end. If this is set to false during execution, the script will stop once it reaches the end. (False is the default value)
+
+b) For loop
+var T : Integer;
+for T := 0 to 20 do
+ begin
+   WriteLn(T);
+ end;
+
+c) Repeat .. until loop
+T := 0;
+repeat
+  WriteLn(T);
+  T := T + 1;
+until (T > 10);
+
+T:=33;
+repeat
+  WriteLn('You will see this line exactly once!');
+  T := T + 1;
+until (T > 10);
+
+d) While..do loop
+T := 0;
+while (T<20) do
+begin
+  WriteLn(T);
+  T := T + 1;
+end;
+
+T:=33;
+while (T<10) do
+  WriteLn('You will NEVER see this line!');
+  T := T + 1;
+end;
+
+Beware of infinite loops! Loops should always have some code that will cause it to eventually exit the loop.
+These are examples of infinite loops:
+T := 0;
+while (T<10) do
+ begin
+   WriteLn(T); 
+ end;
+
+repeat
+  T := 0;
+  T := T + 1;
+until (T>10);
+
+Waiting....
+Although technically not part of the PAL base language, it is crucial we cover the subject of waiting in this section since it is such a core part of most PAL scripts.  A PAL script executes one command or one block of commands every second. For most scripts this is too fast - they usually only need to take action once a song changes, or once a certain time is reached. Theoretically, we could just create a loop that will loop until the condition is met, but this will just waste CPU.
+
+Thus in PAL we have many wait commands, often collectively referred to as "WaitForXXX" commands. (And no, we are not talking about slow porn downloads)
+
+PAL supports 3 waiting commands:
+PAL.WaitForPlayCount(Count);
+PAL.WaitForQueue(Count);
+PAL.WaitForTime(Time);
+
+Using these commands will cause SAM to "pause" the PAL script until the specified event occurs.
+
+Examples:
+PAL.WaitForPlayCount(2);
+This command will wait for exactly two songs to play before the script is resumed. This is done by setting a counter internally as soon as the WaitForPlayCount is executed, then for each song that is loaded into a deck and starts playing the counter are decreased. As soon as the counter reaches zero - the script is resumed.
+
+PAL.WaitForQueue(2);
+This command will wait for the queue to contain exactly two tracks. So if the queue had 4 tracks, and you start playing tracks from the queue, the script will eventually continue once the queue reaches 2 tracks. On the flip side, if the queue had zero tracks in it, this command will wait until 2 tracks are added to the queue.  Think carefully when you use this command - it can be tricky especially if you have multiple PAL scripts managing tracks in the queue. It is very possible that other scripts can keep the queue full (i.e. at 4 tracks) and that the queue will never reach 2 tracks.
+
+PAL.WaitForTime(Time);
+This is indeed a very useful wait command. First we need to cover the different ways this can be called. The "Time" can be specified in many ways.
+a) As a DateTime variable
+var D : DateTime;
+D := Now + 1; {Tomorrow this time}
+PAL.WaitForTime(D);
+
+Another example - using the T timemask object we learned about earlier. This also returns a DateTime value.
+PAL.WaitForTime(T['14:00:00']);
+
+b) As a string time mask.
+The exact same time mask format used with the T time mask object can be used in the WaitForTime command.
+Examples:
+PAL.WaitForTime('+00:00:10');  {## Wait for 10 seconds}
+PAL.WaitForTime('14:30:00');  {## Wait for 2:30pm TODAY}
+PAL.WaitForTime('XX:00:00');  {## Wait for next hour}
+
+PAL.WaitForTime('14:00:00'+1);  {## This is invalid! See below for correct syntax}
+Use this instead:
+PAL.WaitForTime(T['14:00:00']+1); {## This works - uses DateTime value} 
+
+So in short - you can either pass a DateTime variable or value, or pass a string time mask.
+
+There is a subtle logical issue you need to be aware of as a PAL developer.
+
+Say you have this PAL script:
+PAL.Loop := True;
+PAL.WaitForTime('10:00:00');
+WriteLn('It is now 10am in the morning');
+PAL.WaitForTime('20:00:00');
+WriteLn('It is now 8pm in the afternoon');
+PAL.WaitForTime('23:59:59');
+
+If this script is started at 7am in the morning, then it will work as expected. SAM will wait till 10AM, write the message, wait till 8pm, write the message, and then wait till 1 second before midnight before the script is restarted - ready for the next day.
+
+However, if this script is started at 5pm, then SAM will check the first PAL.WaitForTime('10:00'); and realize that 10am < 5pm, so it will not wait and immediately print out the message "It is now 10am in the morning". Then from this point onward it will work as expected - i.e. wait till 8pm, write the message, and then wait till 1 second before midnight before the script is restarted - ready for the next day.
+
+More advanced PAL developers know this and write slightly more complex scripts to skip over sections of the day that already passed them by without executing the code.  We provide one quick example of how this can be achieved - although there are many other methods that may be used.
+
+var OldTime : DateTime;
+OldTime := Now; {Get the time the script started}
+
+PAL.Loop := True;
+PAL.WaitForTime('10:00:00');
+if (OldTime<=T['10:00:00']) then WriteLn('It is now 10am in the morning');
+PAL.WaitForTime('20:00:00');
+if (OldTime<=T['20:00:00']) then WriteLn('It is now 8pm in the afternoon');
+PAL.WaitForTime('23:59:59');
+
+Please note that we do not want to be waiting inside an IF statement, so make sure to place the IF statement after your wait. (See below)  Running this script after the 10am will only result in the 8pm code being executed, provided the script was started before 8pm.  This totally solves the problem of scriptings being started late in the day causing unintended results.
+
+Now, a few important concepts about waiting:
+You can not wait inside 
+a) IF..THEN statements
+b) CASE..OF statements
+c) Custom functions & procedures
+PAL will simply skip over the wait command. This is an unfortunate result of the implementation of the core language PAL was based on. This language was never meant to be execute line-by-line, but rather as a complete program. Thus we had to significantly modify this language to meet our needs. Unfortunately we were not able to work around this problem for the above mentioned statement blocks.
+
+The good news is that there is ways to avoid this problem.
+1. Do not wait inside functions & procedures. Rather repeat the source lines where needed.
+2. In the case of IF..THEN and CASE..OF statements, use a WHILE..DO loop instead.
+
+For example:
+IF (A>B) THEN 
+ begin
+   PAL.WaitForPlayCount(1);
+ end;
+
+Can be replaced with:
+var Dummy : Boolean = True;
+WHILE (A>B) AND (Dummy) DO
+begin
+  PAL.WaitForPlayCount(1);
+  Dummy := False;
+end;
+
+While obviously not the perfect solution, it gets the job done. Oh, another tip. You can use the Dummy variable if you have many replacements to do. You just have to remember to either set Dummy := True; before the while loop.
+
+Speeding up execution
+PAL was written to be a low priority process inside SAM so that the audio quality never gets affected. As a result PAL executes only line of code every second.
+In program execution terms that are very slow - but for PAL this works perfect 99% of the time.
+But there are moments where you need that instant execution. Luckily PAL makes this easy with the 
+
+PAL.LockExecution;
+{Do stuff}
+PAL.UnlockExecution;
+
+commands.
+Example:
+
+T := 0;
+While (T<100) do
+ begin
+   WriteLn(T);
+   T := T + 1;
+ end;
+
+This script will take at least 100 second to execute. By adding 2 lines, we can make the script execute in under 2 seconds.
+
+var T : Integer;
+
+PAL.LockExecution;
+T := 0;
+While (T<100) do
+ begin
+   WriteLn(T);
+   T := T + 1;
+ end;
+PAL.UnlockExecution;
+
+Be careful though - SAM will "freeze up" while a PAL script is in locked execution - thus do not stay locked for long periods of times. You can even check how long your code has been executing, and then take a short breather every now and then by either using a "WaitForXXX" command, or quickly unlocking and then locking execution again.
+
+Objects
+PAL is a fully OOP language. Although you will most likely not use much OOP yourself, PAL contains many objects which you need to be able to use.
+(OOP = Object Orientated Programming)
+
+Objects are almost like variables, except that objects can also perform actions via methods
+Objects also store data via properties. Some properties are read only though, i.e. they can only be used to read values, not change the values.
+
+Examples:
+ActivePlayer.FadeToNext; {Method}
+ActivePlayer.Volume := 255; {Read/Write property}
+WriteLn(ActivePlayer.Duration); {Read-only property}
+
+var Obj : TPlayer;
+
+Obj := ActivePlayer;
+Obj.FadeToNext;
+
+Objects support inheritance:
+var Obj : TObject;
+Obj := ActivePlayer;
+
+if Obj is TPlayer then {Check if object is of the right type}
+  TPlayer(Obj).FadeToNext; {TypeCast object to correct type and use it}
+
+You can also create and destroy many of your own objects:
+
+var List : TStringList;
+
+List := TStringList.Create; {Create a stringlist object}
+
+{Do stuff with object here}
+
+List.Free; {Remember to free the object from memory once you are done with it}
+
+Section 1minute overview:
+
+Declaring variables:
+const A = 'Hello world!';
+const A = 123;
+
+var V : Integer;
+var V : String;
+var V : Array[1..5] of Integer;
+var V : Array of Integer;
+var V : TMyClass;
+
+var V : Integer = 1;
+var V : String = 'Hello world!';
+
+Math:
+m := a + b;
+m := a - b;
+m := a * b;
+m := a / b; {Float only}
+m := a div b; {Integer only; Discards the remainder}
+m := a mod b; {Integer only; Result is only the remainder}
+m := -m;
+
+Logic:
+not a
+a or b
+a and b
+a xor b
+a < b
+a <= b
+a > b
+a >= b
+a <> b
+a = b
+
+Casting:
+Float(x)
+DateTime(x)
+
+Type checking & casting:
+a is TMyClass
+TMyClass(a)
+
+Selection:
+if {logic expression} then
+ {Do stuff}
+else
+ {Do stuff};
+
+case {Value} of
+ 1       : {Do stuff}
+ 2..4   : {Do stuff}
+ 5,6,7 : {Do stuff}
+ else {Do stuff}
+end;
+
+Loops:
+var C : Integer;
+For C := A to B do
+ begin
+   {Do stuff}
+ end;
+
+while {Logic expression is True} do
+ begin
+  {Do stuff}
+ end;
+
+repeat
+  {Do stuff}
+until {Logic expression is True};
+
+Waiting:
+PAL.WaitForTime(TimeMask/DateTime);
+PAL.WaitForPlayCount(SongCount);
+PAL.WaitForQueue(NoOfItemsInQueue);
+
+Speeding up execution:
+PAL.LockExecution;
+PAL.UnlockExecution;
+
+Some warnings about PAL scripting
+PAL scripting is a powerful programming language. With this power comes a lot of responsibility.
+Incorrectly written PAL scripts can have many bad side effects, those include:
+1. Cause SAM to lock up/freeze.
+2. Cause exception errors in SAM, affecting the stability in SAM.
+3. Although PAL does automatic garbage collection on script restart, it is possible to write scripts that consume all available memory if memory allocation is done in long-running loops.
+4. PAL gives you direct access to your SQL database. It is possible to use SQL queries to completely erase or destroy the database and data integrity.
+5. PAL gives you the power to work with files on your local hard disk and network. PAL can be used to delete or modify files.
+
+Thus beware of example scripts you download from the internet. Review them first to make sure that they are written well and will not affect your broadcast negatively.  We also do not recommend developing PAL scripts on a production machine. It is best to have a mirror copy of SAM running on another machine, and then developing scripts on this machine.
+
+
+Section 2 - The main SAM objects
+
+Although SAM Broadcaster is a complex program, it can be described as 4 main components.
+2.1. The playlist/media library of tracks.
+2.2. Music selection logic & playlist rules.
+2.3. The audio engine consisting of different audio channels represented by decks/players.
+2.4. Finally, the encoders and statistic relays.
+
+All other objects found in the PAL scripting language are basically used to support these main functions.  In this section we will discuss some of these main objects and use them in some real-world PAL scripts to demonstrate their functionality.
+
+
+2.1 The media library/playlist
+SAM Broadcaster stores EVERYTHING it played in the media library. Or more correct, SAM can only play a track if it exists in the media library. Without it SAM would not be able to do the advanced playlist management and selection logic rules needed for a professional radio station.
+
+Before we continue it is vital that you understand the playlist and categories inside SAM Broadcaster.
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Understanding_Playlist_Categories.htm
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Category_Based_Rotations.htm
+
+2.1.1 Importing or exporting files to/from the media library
+
+Importing
+You can add files to either a category or directly to the queue using various PAL commands.
+A few examples:
+CAT['MyCategory'].AddDir(‘c:\music\’, ipBottom);
+CAT['MyCategory'].AddFile(‘c:\music\test.mp3’, ipBottom);
+CAT['MyCategory'].AddList(‘c:\music\playlist.m3u’, ipBottom);
+CAT['MyCategory'].AddURL(‘http://localhost:8000/test.mp3’, ipBottom);
+
+The same commands can also be used for adding files to the queue
+Queue.AddDir(‘c:\music\’, ipBottom);
+Queue.AddFile(‘c:\music\test.mp3’, ipBottom);
+Queue.AddList(‘c:\music\playlist.m3u’, ipBottom);
+Queue.AddURL(‘http://localhost:8000/test.mp3’, ipBottom);
+
+
+Exporting
+Starting with SAM4, you can now easily store the contents of a category or the queue to file. This can be very useful when used with music scheduling software like M1 SE (http://www.spacialaudio.com/products/m1se) 
+
+Exporting a category can be done via the following PAL commands:
+CAT['MyCategory'].SaveAsM3U('c:\list.m3u'); {Export as m3u playlist}
+CAT['MyCategory'].SaveAsCSV('c:\list.csv'); {Export as CSV data file}
+ 
+Exporting the queue can be done as follows:
+Queue.SaveAsM3U('c:\list.m3u'); {Export as m3u playlist}
+Queue.SaveAsCSV('c:\list.csv'); {Export as CSV data file}
+
+Note: CSV files are spreadsheet files, also commonly known as comma-delimited files.
+   
+
+2.1.2 Using media library for custom rotation "clockwheels"
+Serious broadcasters know the importance of properly tagging their music, i.e. making sure the artist, title, album and other fields are properly completed. Once that is done the music, jingles, promos and even advertisements are sorted into various categories.  Once all that hard work is done, the scheduling of music in a professional radio format becomes really easy.
+
+In SAM music scheduling becomes the basic task of selecting a song from a certain category, and adding it to the queue.  When selecting a track from a category, SAM can use many different logics http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Selection_Method_Logic.htm) and then apply certain selection rules (http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Playlist_Rotation_Rules.htm) to get the best track that meets all these rules.
+You can also specify if the track should go to the top or the bottom of the queue. We will show you later how to put this into good use.
+
+So let’s jump in with a very simple script:
+
+PAL.Loop := True;
+
+Cat['Tracks'].QueueBottom(smLemmingLogic, EnforceRules);
+Cat['Music (All)'].QueueBottom(smLRPA, EnforceRules);
+Cat['Hot Hits'].QueueBottom(smLRP, EnforceRules);
+Cat['Adz'].QueueBottom(smLRPA, NoRules);
+
+PAL.WaitForPlayCount(4);
+
+In the above script we first set the script to loop/restart.  Next we insert 4 tracks into the bottom of the queue. The first track will come from the "Tracks" category and we will use the random lemming logic to select the song, and then enforce our playlist rules on the selection of the song. We do similar, but slightly different things for the other 3 categories (see if you can spot and understand the difference!).
+
+Finally, we wait for SAM to play 4 tracks, before the script ends and restarts/loops. (Why do we wait? What would happen if we did not wait?)
+
+The final result of this script is that we play 
+One song from the category "Tracks"
+One song from the category "Music (All)"
+One song from the category "Hot Hitz"
+One song from the category "Adz"
+
+This format of programming will continue until the PAL script is stopped manually.  Inserting jingles, promos and station IDs into your format are also relatively simple. 
+For example:
+PAL.Loop := True;
+
+Cat['Tracks'].QueueBottom(smLemmingLogic, EnforceRules);
+Cat['Music (All)'].QueueBottom(smLRPA, EnforceRules);
+Cat['Hot Hits'].QueueBottom(smLRP, EnforceRules);
+Cat['MyPromos'].QueueBottom(smLRP, NoRules);
+
+PAL.WaitForPlayCount(4);
+
+Cat['Tracks'].QueueBottom(smLemmingLogic, EnforceRules);
+Cat['Music (All)'].QueueBottom(smLRPA, EnforceRules);
+Cat['Hot Hits'].QueueBottom(smLRP, EnforceRules);
+Cat['MyJingles'].QueueBottom(smLRP, NoRules);
+
+PAL.WaitForPlayCount(4);
+
+Notice how I had to repeat the song categories so I could place 1 Promo after a set and then 1 Jingle after another set - and have this repeat.
+Also notice that I used the "NoRules" in the logic. By now you should know why this is required.
+
+Let’s move on to a slightly more complex example. Here we will use two separate PAL scripts that run at the SAME time to produce our playlist logic.  PAL #1 will be responsible for scheduling our music, while PAL #2 will be responsible for adding jingles, promos and Adz to the system.
+
+PAL 1
+PAL.Loop := True;
+
+Cat['Tracks'].QueueBottom(smLemmingLogic, EnforceRules);
+Cat['Music (All)'].QueueBottom(smLRPA, EnforceRules);
+Cat['Hot Hits'].QueueBottom(smLRP, EnforceRules);
+
+PAL.WaitForQueue(0);
+
+PAL 2
+PAL.Loop := True;
+
+PAL.WaitForPlayCount(5);
+Cat['MyJingles'].QueueTop(smLRP, NoRules);
+
+PAL.WaitForPlayCount(3);
+Cat['MyPromos'].QueueTop(smLRP, NoRules);
+Cat['MyAdz'].QueueTop(smLRP, NoRules);
+
+A few things to pay attention to:
+- We now use the WaitForQueue command in PAL 1 to know when to insert more songs into the queue.
+- PAL 2 uses QueueTop now, because there might be songs in the queue - and we want to place this jingle/promo/ads content in the very next to-be-played spot at the top of the queue.
+- Also, note that MyAdz will be placed above MyPromos in the queue. (In reverse order - make sure you understand why this happens)
+
+2.1.3 Scheduling advertising in SAM (via StreamAdz)
+Since SAM Broadcaster v4, SAM has direct integration with the powerful advertisement delivery platform called StreamAdz (http://www.spacialaudio.com/products/streamadz). 
+Instead of selecting a track from a category, you simply execute the StreamAdz PAL command to insert a specified duration of advertisements. SAM will then automatically select one or more advertisements to fill the specified advertisement block.
+
+Examples
+StreamAdz['Providers (All)'].QueueBottom(30); {Select an advertisement from any provider}
+StreamAdz['Provider C'].QueueBottom(60); {Select an advertisement using ONLY provider C}
+
+The following script demonstrated an easy advertisement scheduling script, inserting 2 minutes of advertising every 15 minutes.
+
+PAL.Loop := True;
+StreamAdz['Providers (All)'].QueueBottom(120); {Insert 2 minutes of advertising}
+PAL.WaitForTime(‘+00:15:00’); {Wait 15 minutes}
+
+
+
+2.2 Music selection logic & playlist rules.
+Tracks stored in categories can be selected using various selection logics.  For example, smRandom will select a random track from the category while smLRP will select the song that has not played for the longest time. (Least Recently Played)
+
+A song can only be selected if it complies with the Playlist logic rules. These rules aim to limit the amount of times a song, artist or album repeats within a period of time. For example it will be very bad to play the same song back-to-back! In the USA the DCMA laws even makes it illegal to repeat songs, artists or albums too frequently.
+
+At this moment it is important that you fully understand both:
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Playlist_Rotation_Rules.htm
+http://www.spacialaudio.com/products/sambroadcaster/help/sambroadcaster/Selection_Method_Logic.htm
+
+Do-not-repeat rules do not however apply to jingles, promos, advertisements, etc. in the same way. That is why in general we use the NoRules flag when selecting these content types. However, you still do not want to repeat these too often. Playing the same jingle back-to-back or playing the same advertisement back-to-back is just as bad. The easiest way to avoid this is to use the smLRP rule. That way SAM will cycle through the content in a top-to-bottom fashion.
+Even this fails though when inserting multiple tracks into the queue, because no repeat checking is applied - the same song will be added to the queue multiple times!
+
+To solve this we need a special PAL script that modifies the playlist rules, insert the content, and then restores the old content. Now you are free again to use any selection logic method you wish!
+
+Example:
+{Declare a procedure that we will define later}
+procedure NoRules(MyCat : String; Logic : Integer); forward;
+
+PAL.Loop := True;
+NoRules('MyAdz',smLRP);
+NoRules('MyAdz',smRandom);
+NoRules('MyAdz',smLRP);
+
+PAL.WaitForPlayCount(8);
+
+{========================================================}
+procedure NoRules(MyCat : String; Logic : Integer);
+var
+ tArtist,
+ tAlbum,
+ tTitle  : Integer;
+begin
+ {Save current rules so we can restore them later}
+ tArtist := PlaylistRules.MinArtistTime;
+ tTitle  := PlaylistRules.MinSongTime;
+ tAlbum  := PlaylistRules.MinAlbumTime;
+ 
+ {Set some very low repeat rules - 1 minute}
+ PlaylistRules.MinAlbumTime  := 1;
+ PlaylistRules.MinArtistTime := 1;
+ PlaylistRules.MinSongTime   := 1;
+ 
+ {Insert content to top of queue using our new rules}
+ CAT[MyCat].QueueTop(Logic,EnforceRules);
+
+ {Restore original rules}
+ PlaylistRules.MinArtistTime := tArtist;
+ PlaylistRules.MinSongTime   := tTitle;
+ PlaylistRules.MinAlbumTime  := tAlbum;
+end;
+{========================================================}
+
+While SAM should be able to cater to all your needs, some people have very specific needs for their rotation. Luckily with the power of PAL, most have found ways to achieve their goals with some nifty scripting.
+
+One example is the Custom Song Balance script developed by Toby, slightly updated by Elbert:
+http://www.spacialaudio.com/knowledge/question.php?qstId=68
+
+This PAL script applies 5 custom rules to tracks to decide what track to play next. The only downside to this script is that it takes a lot of CPU time to select a single song.
+
+
+2.3. The audio engine consisting of different audio channels represented by decks/players.
+PAL allows you to control various audio components in the audio engine.This can be very useful for making sure audio elements play exactly like you want them to.  Let’s go through the main components along with a few examples.
+
+DeckA, DeckB, Aux1, Aux2, Aux3 and SoundFX are all player types (Class TPlayer)
+This means that all of the same operations apply to all of these players. (Note that VoiceFX can currently not access via PAL since tracks should in general not be played over this player. This is meant exclusively for voice operation)
+
+Reading currently playing song information
+This script will read the song information of the track loaded into DeckA, and then print out the information.
+
+var Song : TSongInfo;
+Song := DeckA.GetSongInfo;
+if Song = nil then
+ WriteLn('No song loaded into DeckA!')
+else
+ begin
+  WriteLn('Artist: '+Song['artist']);
+  WriteLn('Title: '+Song['title']);
+  WriteLn('Album: '+Song['album']);
+  WriteLn('Duration: '+Song['duration']);
+ end;
+Song.Free;
+
+Notice how we test if the Song = nil, because if that is the case trying to read information on the song object will cause memory access violations since the object does not exist!
+
+Using utility functions
+PAL comes with some very handy built-in functions you can use. These provide you with direct access to the correct player object. (Between DeckA & DeckB only!)
+
+ActivePlayer - This returns the player object considered the "active" player. If only one deck is player a track, then this track will be the active player. If both decks are playing a track, then the deck with the longest duration remaining is considered the active deck.  If NEITHER DeckA or DeckB have any tracks playing, then this function returns NIL. It is very important that you check for the NIL value, unless you are certain that there will always be an active deck.
+
+IdlePlayer - A Deck is considered Idle if no song is queued up in the deck, and the deck is not actively playing any tracks. If both decks are idle, DeckA is returned as the idle object. If both decks are queued up, or actively playing a track - then this function will return NIL!
+
+QueuedPlayer - A player is considered in Queued mode if the Deck has a song object loaded into the Deck, but the Deck is not currently actively playing any tracks.  If both decks are either idle or active, then this function will return NIL! Otherwise it will return the first Queued deck.
+
+Overall the ActivePlayer function is used much more than any of the others. Most of our examples will deal with this function.
+
+For example check if SAM is active:
+if (ActivePlayer = nil) then
+ WriteLn('WARNING!!! Nothing is playing??');
+
+This script will wait for the top-of-the-hour and then insert a news item. It will then immediately fade to this news item.
+
+PAL.Loop := True;
+PAL.WaitForTime('XX:00:00');
+Queue.AddFile('c:\news\news.mp3',ipTop);
+ActivePlayer.FadeToNext;
+
+Here is a bit more of a tricky script. This one will insert some liners over the music, but it will only do so if:
+a) The music has an intro of more than 5 seconds
+b) The music is a normal song (i.e. not a promo, jingle, advertisement, news)
+
+{ About:
+   This script will play a liner in Aux1 as soon as a new track starts
+   The liner will only be played if
+    a) The song has an intro of specified minimum duration
+    b) The song is of type S, i.e. a normal song.
+
+   Then the script will wait the specified amount of time before
+   it tries to play another liner.
+
+   This script can help brand your station and make it sound like a true
+   commercial terrestrial station.
+    any source connected
+
+   Usage:
+    a) Make sure you use the song information editor to specify intro times for your tracks!
+    b) Make sure the AGC settings on Aux1 is to your liking. Also set the volume a bit louder
+       on Aux1 so you can clearly hear the liner above the active Deck audio.
+    c) Edit the configuration details below.
+       Make sure to change the category to the one you use to store your liners.
+}
+{ CONFIGURATION }
+{==================================================}
+const MIN_INTRO = 5*1000; //5 seconds
+const MIN_WAIT  = '+00:15:00'; //Wait 15 minutes between liners
+const LINERS_CATEGORY = 'Liners';
+
+
+{ IMPLEMENTATION }
+{--------------------------------------------------}
+function ExtractIntro(Song : TSongInfo):Integer; forward;
+
+var Song, Liner : TSongInfo;
+var Waiting : Boolean = True;
+var Intro : Integer = 0;
+Aux1.Eject;
+
+{Step1: Queue up the deck, ready for play}
+Liner := CAT[LINERS_CATEGORY].ChooseSong(smLRP,NoRules);
+if (Liner=nil) then
+ WriteLn('No valid liner found')
+else if (not Aux1.QueueSong(Liner)) then
+ WriteLn('Failed to queue song: '+Liner['filename']);
+
+{Wait for a valid song with intro}
+while Waiting do
+ begin
+  {Step2: Wait for the song to change}
+  PAL.WaitForPlayCount(1);
+
+  {Step3: Grab current song information}
+  Song := ActivePlayer.GetSongInfo;
+
+  if (Song=nil) then
+   WriteLn('The active player contained no song info??')
+  else
+   begin
+    {Extract the intro time - this is a bit tricky}
+    Intro := ExtractIntro(Song);
+
+    {Start playing the liner if the current song matches our rules}
+    if(Song['songtype']='S') and (Intro>=MIN_INTRO) then
+     begin
+      Aux1.Play;
+      Waiting := False;
+     end;
+    Song.Free; Song := nil;
+   end;
+end;
+
+{Wait 5 minutes before we do this all again}
+PAL.WaitForTime(MIN_WAIT);
+PAL.Loop := True;
+
+{................................................}
+function ExtractIntro(Song : TSongInfo):Integer;
+var
+ P : Integer;
+ XFade : String;
+begin
+ Result := -1;
+ XFade := Trim(Song['xfade']);
+
+ WriteLn('Decoding XFade string');
+ WriteLn('XFade: '+XFade);
+
+ if XFade = '' then
+  Result := -1
+ else
+  begin
+   P := Pos('&i=',XFade);
+   if (P > 0) then
+    begin
+     Delete(XFade,1,P+2);
+     P := Pos('&',XFade);
+     if (P>0) then
+      Delete(XFade,P,Length(XFade));
+
+     Result := StrToIntDef(XFade,-1);
+     WriteLn('Intro time detected: '+XFade);
+    end;
+  end;
+end;
+
+{--------------------------------------------------}
+
+Other methods and functions
+Here follows a quick discussion on other methods and properties available in the TPlayer object, and how they may be used.
+
+Properties:
+The CurTime property can be monitored to see when a song is approaching its end (when compared to the Duration property) and then some action can be taken right before the next song is started or queued.
+
+For example:
+Var Done : Boolean = False;
+while not done do
+ begin
+  if((ActivePlayer.Duration>0) AND ((ActivePlayer.Duration-ActivePlayer.CurTime)>10000)) then
+   begin
+      WriteLn('This song will end in 10 seconds!');
+      Done := True;
+   end;
+ end;
+
+Note: Due to the gap killer, it may be less than 10 seconds. You can use the actual value of the calculation to get the correct value of the time remaining.
+
+You can read and write the Volume property of a Deck. This can be used to player advertisements, stationIDs, etc. louder than other tracks.  We recommend you use the song information editor to set the Gain for each track of these audio content types, but this script might be an alternative solution.
+
+var Done : Boolean = False;
+var Song : TSongInfo;
+
+While not Done do
+begin
+ if QueuedPlayer <> nil then
+  begin
+    Done := True;
+    Song := QueuedPlayer.GetSongInfo;
+    if (Song<>nil) then
+     case song['songtype'] of
+      'S' : QueuedPlayer.Volume := 255;
+      'A','J','P' : QueuedPlayer.Volume := 350;
+      else QueuedPlayer.Volume := 255;
+     end; //case
+  end;
+end;
+
+PAL.Loop := True;
+PAL.WaitForPlayCount(1);
+
+Once again, this is not the recommended method - but it does serve as a good example of how to use the volume option in PAL.  Note:  255 is full volume, while 350 is volume with extra gain applied.
+
+Using the above as reference, you should now be able to also create a script that can adjust the tempo or pitch of the deck according to what song is currently queued in it.  This can be used for a script that does automatic beat matching for example...
+
+Please refer to the PAL manual about the various other properties and methods we did not discuss in this chapter.
+
+2.4. Encoders and statistic relays
+PAL also gives you access to the encoders & statistic relays.
+This gives you the power to start/stop the encoders - as well as insert scripting data into the stream.
+We will cover some of these techniques in the following sections.
+
+2.4.1 Statistic relays
+The Relays class basically allows you the power to do 5 main things:
+- Read the status of all the relays
+- Read the current listener count
+- Read the peak listener count
+- Read the maximum available listener slots
+- Force an update of the statistic relays.
+
+Example scripts:
+{Print out relays information - all combined}
+PAL.LockExecution;
+
+    WriteLn('Relays overview ');
+    WriteStr('--Active: ');
+    if Relays.AtLeastOneActive then WriteLn('Online') else WriteLn('Offline');
+    WriteStr('--Viewers: '); WriteLn(Relays.Viewers);
+    WriteStr('--Peak: '); WriteLn(Relays.Viewers_High);
+    WriteStr('--Max: '); WriteLn(Relays.Viewers_Max);
+    WriteLn('');
+  
+PAL.UnlockExecution;
+
+{Print out relays information - each relay on its own}
+
+var I : Integer;
+
+PAL.LockExecution;
+
+for I := 0 to Relays.Count-1 do
+  begin
+    WriteStr('Relay number '); WriteLn(I);
+    WriteStr('--Active: '); WriteLn(Relays[I].Active);
+    WriteStr('--Status: '); WriteLn(Relays[I].Status);
+    WriteStr('--Viewers: '); WriteLn(Relays[I].Viewers);
+    WriteStr('--Peak: '); WriteLn(Relays[I].Viewers_High);
+    WriteStr('--Bitrate (kbps): '); WriteLn(Relays[I].Bitrate);
+    WriteStr('--Format: '); WriteLn(Relays[I].Format);
+
+    WriteLn('');
+  end;
+  
+PAL.UnlockExecution;
+
+At the 2003 BurningRealm get-together, we discussed using PAL + Statistic relays to write an artificial intelligent script that would monitor the response to tracks to try and improve the rotation of the system. For example, if a track plays and a lot of listeners disconnect - then we can assume that they did not like the track and give the track a lower rating so that is plays less. If the listener count stayed the same, or grew - then we could increase the rating for the song.
+We were able to come up with a script that did a lot of this, but there were many subjective issues with this design which made it hard to use in a real-world environment. It was however an interesting experiment in the power of PAL.
+
+Other ideas:
+- Read the status of relays. If a relay is down, take come action. (i.e. use the WebToFile function to notify you about this problem)
+
+2.4.2 Encoders
+
+Starting/Stopping encoders
+This is a simple script to start all encoders at 7am in the morning, and then stop them again at 8pm:
+
+PAL.Loop := True;
+
+PAL.WaitForTime('07:00:00');
+Encoders.StartAll;
+
+PAL.WaitForTime('20:00:00');
+Encoders.StopAll;
+
+You can also start/stop a single encoder by using the encoder array index. (Remember, we count from zero)
+
+PAL.Loop := True;
+
+PAL.WaitForTime('07:00:00');
+Encoders[0].Start;
+
+PAL.WaitForTime('20:00:00');
+Encoders[0].Stop;
+
+Archiving
+Since SAM Broadcaster v3.3.2 you now have the option to specify that an encoder does absolutely no streaming, but will be used to archive the content only.  This allows you to create a second encoder which sole duty is to archive the stream.
+
+Here is an example script which is meant for two encoders, where encoder0 is the actual streaming encoder, and encoder1 is the archiving encoder.  This script will cause the archive to be split into multiple sections each hour, but restarting the encoders on the hour. Note that this will not affect the streaming encoder at all since it never gets stopped!
+
+PAL.Loop := True;
+PAL.WaitForTime('XX:00:00');
+Encoders[1].Stop;
+Encoders[1].Start;
+
+Switching DJ's
+A lot of stations have more than one DJ operating the station, most of the time these DJ's are spread across the world. They employ a nifty trick to switch between DJ sessions. If you new DJ wishes to start their session, they log into the SHOUTcast admin panel and kick the current DJ's encoder, and then quickly connect with their own encoder.
+
+The following PAL script can completely automate this process:
+
+{ About:
+   This script will disconnect any source connected
+   to a SHOUTcast server and then connects this
+   SAM Broadcaster as the new source.
+   
+   Usage:
+    a) Create a single MP3 encoder to connect to the SHOUTcast server.
+    b) Supply your SHOUTcast server details in the configuration section below
+    c) Use the Event Scheduler to start this PAL script at the correct time.
+}
+{ CONFIGURATION }
+{==================================================}
+const shoutcast_password = 'changeme';
+const shoutcast_host     = 'localhost';
+const shoutcast_port     = '8000';
+{==================================================}
+
+{ IMPLEMENTATION }
+{--------------------------------------------------}
+
+{ Build URL used to send command to SHOUTcast server }
+var URL : String;
+URL := 'http://admin:'+shoutcast_password+'@'+shoutcast_host+':'+shoutcast_port+'/admin.cgi?mode=kicksrc';
+
+{ Kick source from SHOUTcast server }
+WebToFile('c:\dummy.txt',URL);
+
+{ Now start & connect all encoders }
+{ NOTE: This assumes you only have one encoder }
+Encoders.StartAll;
+
+{TIP: Use this to start a specific encoder:
+Encoders[0].Start;
+}
+
+{--------------------------------------------------}
+
+Changing song titles
+The encoder class also allows you to update the current song information or title data being sent to the streaming server. See TitleStreamBanners.pal for an example.
+Note: This can also be done for each individual encoder, in case it does not make logical sense to change the title data on all your active encoders. For example if you have an archiving encoder, you most likely do not want to update the titles in this.
+
+Embedded scripts
+While SAM Broadcaster is one of the few encoders (in fact the only one we are aware of) that supports embedded ID3v2 tags inside MP3 streams, due to lack of player support we will only discuss Windows media scripts here.
+
+Windows Media allows for embedded scripts in the audio data. These scripts can be used for displaying current song data, captioning information or synchronizing external pictures and text of the current audio. We use this in our StreamAdz system to synchronize text and banner advertising with audio advertising.
+
+The following example PAL script is for display the current local time in the captioning area of the Windows Media player every minute.
+Please note: For you to be able to see the captioning data, you must enable the captioning view inside your player.
+Menu->Play->Captions and Subtitles->On if available
+
+PAL.Loop := True;
+PAL.WaitForTime('XX:XX:00');
+Encoders.WriteScript('CAPTION','The local time is now '+TimeToStr(Now));
+
+
+
+Other ideas:
+- Read the status string of encoders. If an encoder is down or disconnect, take some action. (i.e. use the WebToFile function to notify you about this problem)
+
+
+Section 3 - Advanced PAL scripts and techniques
+
+Now that we covered some of the basic & more often used PAL objects & commands, lets move forward and tackle some more obscure and advanced issues.
+
+3.1 Working directly with the database (SQL queries)
+PAL allows you to directly access the database via SQL queries, and query result sets.  Be careful when working with the database directly - although this can be very useful, it is also easy to make mistakes that can corrupt your database or cause you to lose data. Make backups of your database before you start developing and testing new scripts. Even better, get separate machines that mirrors your production machine and do all your development on this machine.
+
+This section assumes you have a good knowledge of SQL statements. Teaching you SQL is beyond the scope of this document. You will find many good resources on SQL on the web. We recommend buying a good SQL book when you start learning SQL.
+
+SQL parameters
+Before we jump into the actual SQL code we first need to explain the usage of SQL parameters inside SQL queries.
+Usually a query looks something like:
+SELECT * FROM songlist WHERE (ID = 123) AND (date_played < '2005-01-01')
+
+Notice how the values "123" and "2005-01-01" is hardcoded into the SQL string. This makes updating SQL queries hard & cumbersome. To solve this PAL introduces SQL parameters ... think of them as variables for SQL.
+
+For example the above query could be done like this in PAL:
+var Q : TDataSet;
+Q := Query('SELECT * FROM songlist WHERE (ID = :ID) AND (date_played < :DatePlayed)',[123,'2005-01-01'],True);
+
+Notice how easy it is to replace the actual values now!
+For example, let’s use an actual date for the "DatePlayed":
+Q := Query('SELECT * FROM songlist WHERE (ID = :ID) AND (date_played < :DatePlayed)',[123,Now],True);
+
+The awesome thing about SQL parameters is that PAL will automatically convert the value in the correct format, and also in the correct format that your specific database expects. For example data/time fields in databases usually expect this to be in a very specific format. By using SQL parameters you can be assured that the date/time will be formatted in the correct way, and thus your same script will work in all the different database types.
+
+SQL commands
+In PAL there are two main SQL commands:
+function Query(Sql: String; Params: Array of Variant; ReadOnly: Boolean): TDataSet;
+function ExecSQL(SQL: String; Params: Array of Variant): Integer;
+
+ExecSQL is used to execute an SQL statement that does not return any data. This function returns the number of rows affected by the query.
+
+Examples:
+{Reset the balance of songs to zero}
+var cnt : Integer = 0;
+cnt := ExecSQL('UPDATE songlist SET balance = 0',[]);
+WriteLn(IntToStr(cnt)+' tracks were updated');
+
+{Delete a certain artist from the songlist}
+var cnt : Integer = 0;
+cnt := ExecSQL('DELETE FROM songlist WHERE artist LIKE :artist',['Blink182']);
+WriteLn(IntToStr(cnt)+' tracks were updated');
+
+The Query command is used exclusively with the SELECT SQL command which always returns a result set.  This result set is encapsulated inside a TDataSet class object. Using this object you can browse the resulting rows of data, and even change the data.
+
+Examples:
+{This example prints the filenames of the last 10 songs that played.
+Note: This script only works in the MySQL & PostgreSQL databases due to the database specific "LIMIT 10" statement}
+var Q : TDataSet;
+Q := Query('SELECT filename FROM songlist ORDER BY date_played DESC LIMIT 10',[],True);
+
+Q.First;
+while not Q.EOF do
+begin
+  WriteLn(Q['filename']);
+  Q.Next;
+end; 
+
+Using the TDataset class:
+Checking if the result set contains any rows:
+
+if Q.IsEmpty then
+ WriteLn('The query returned zero rows!');
+
+Looping thought all the rows:
+
+Q.First; {Set result set to the first row}
+while not Q.EOF do {Check if we have reached the end of the result set}
+begin
+  WriteLn(Q['filename']); {Do something with the record}
+  Q.Next; {Jump to next row}
+end; 
+
+Editing data:
+Important: When you want to change the field data inside a row, you must query the results with the "ReadOnly" parameter set to false. Otherwise, the results will be "read-only" and you will not be able to change the data.
+
+Example:
+This script will select all songs that start with the letter 'A' and then reset their balance to zero.
+
+var Q : TDataSet;
+Q := Query('SELECT * FROM songlist WHERE title LIKE :title',['A%'],False);
+
+Q.First;
+while not Q.EOF do
+begin
+  WriteLn(Q['filename']);
+  Q.Edit;
+   Q['balance'] := 0;
+  Q.Post;
+  Q.Next;
+end;
+
+3.2 Downloading files
+
+Downloading files for playback:
+Using PAL scripts to download content, like static MP3 files into the playlist have been used by many broadcasters to automate their syndication. The hourly USA News script that is available to registered SAM Broadcaster users is a good example of such a script. This script basically downloads the news every hour, adds the news to the right categories ... and then finally inserts it into the queue to be played at the right time.
+
+You may contact SpacialAudio to get a copy of this script ... provided you are a registered SAM Broadcaster client. Make sure to include your SAM registration key or your client email so we can verify this.
+
+Here follows a very simple script that downloads a remote file and adds this file to the queue:
+
+const File_Remote = 'http://www.spacialaudio.com/promote/samlaunch.wma';
+const File_Local  = 'c:\content\samlaunch.wma';
+
+WebToFile(File_Local,File_Remote);
+
+Queue.AddFile(File_Local,ipTop);
+ActivePlayer.FadeToNext;
+
+Calling external scripts
+The WebToFile function is also very useful to call external scripts. For example you can write a PAL script that calls a PHP script on your website that updates the name and details of the current DJ in action. When a new DJ starts his set, all he needs to do is run his special PAL script and the script does the rest.
+(Can even be combined with the KickSource.pal script!)
+
+Of course, the KickSource.pal is also a good example of how the WebToFile function can be used to cause an external action - in this case kicking a source so a new encoder can connect.
+
+
+3.3 Working with files
+
+Filename helper functions
+Here are some useful functions to help extract certain parts of the filename. See the PAL docs for details on how to use each of these and what the return.
+
+ExtractFileDir
+ExtractFileDrive
+ExtractFileExt
+ExtractFilePath
+ExtractFileName
+
+File system commands
+PAL can do basic file operations like:
+function CopyFile(SrcFileName, DestFile: String; FailIfExists: Boolean): Boolean;
+function RenameFile(OldName: String; NewName: String): Boolean;
+function DeleteFile(Filename: String): Boolean;
+function FileExists(Filename: String): Boolean;
+
+These allow you to Copy, Rename, Delete or check if a file exists respectively.
+
+Example:
+if FileExists('c:\music\promo.mp3') then
+ if not DeleteFile('c:\music\promo.mp3') then
+    WriteLn('Warning: Unable to delete promo file');
+
+These basic commands allow you to organize the files on the disk.
+
+Working with the actual contents of the files however is a bit trickier.  Although PAL can work with binary files, PAL is best suited to work with text based files.  Lets start by loading the complete contents of a text file into a string, displaying the value - and then writing back another value.
+
+var Data : String = '';
+const MyFile = 'c:\MyTestFile.txt';
+if FileExists(MyFile) then
+ begin
+  Data := FileToStr(MyFile);
+  WriteLn('The current contents of the file:');
+  WriteLn(Data);
+ end
+else
+  WriteLn('Data file does not exist.');
+  
+Data := Data + DateTImeToStr(Now) + #13#10;
+
+if not StrToFile(MyFile,Data) then
+ WriteLn('Unable to save value');
+
+Run this script a few times to see the end result.
+Note that the #13#10 is added to the string to form a "NewLine" character. #13 is the code for new line, while #10 is the code for return.
++#13#10 is the same as + #13 + #10.
+
+A more useful way to work with textfiles is to load the contents of the file into a TStringList object.
+That way we can easily access the contents of each line in the textfile.
+
+As an example, lets write a small script to import *.m3u playlist files into SAM. Normally M3U files are plain text files, with each new line containing a filename of a song in the playlist. However, extended M3U files also contains comments and additional data - these lines start with a #
+Note: Some M3U files contain relative paths. This script will not be able to handle those correctly. Please make sure your M3U contains fully qualified paths, otherwise this script may not work as intended.
+
+Example M3U file:
+#EXTM3U
+#EXTINF:366,Zen Arcade - Crazy Over You
+c:\music\Zen Arcade - Crazy Over You.mp3
+#EXTINF:258,REM - night swimming
+c:\music\REM - night swimming.mp3
+#EXTINF:285,The Cure - Pictures Of You
+c:\music\The Cure - Pictures Of You.mp3
+#EXTINF:-1,http://sc3.audiorealm.com:12234/
+http://sc3.audiorealm.com:12234/
+
+The Playlist loader script:
+
+const PlaylistFile = 'c:\playlist.m3u';
+
+var List : TStringList;
+var T : Integer;
+
+List := TStringList.Create;
+
+if FileExists(PlaylistFile) then
+  List.LoadFromFile(PlaylistFile)
+else
+  WriteLn('Playlist file does not exist!: '+PlaylistFile);
+
+{Remove all entries that are extended data}
+T := 0;
+while T < List.Count do
+begin
+ if (Trim(List[T])='') or (List[T][1]='#') then
+  begin
+   WriteLn('Deleting entry: '+List[T]);
+   List.Delete(T);
+  end
+ else
+   T := T + 1;
+end;
+
+WriteLn('-----------------------------');
+
+{Print a list of the files in the playlist}
+{And add the list to the queue}
+for T := 0 to List.Count-1 do
+ begin
+   WriteLn(List[T]);
+   Queue.AddFile(List[T],ipBottom);
+ end;
+
+List.Free;
+
+Configuration files
+The stringlist object also contains quite a few useful methods which make it easy to use it as a way to store configuration information.  Values can be assigned to the stringlist with a label, and then the complete contents can be stored as a text file.
+
+const ConfigFile = 'c:\PALConfig.ini';
+
+var List : TStringList;
+var T : Integer;
+
+List := TStringList.Create;
+
+{Load configuration file}
+if FileExists(ConfigFile) then
+  List.LoadFromFile(ConfigFile)
+else
+ begin
+  WriteLn('Configuration file does not exist, so let’s create one');
+  List.Values['station'] := 'My test station';
+  List.Values['website'] := 'http://www.palrocks.com';
+  List.Values['genre']   := 'Rock, Alternative';
+
+  List.SaveToFile(ConfigFile);
+ end;
+  
+{Use values}
+WriteLn('Station name: '+List.Values['station']);
+WriteLn('Website: '+List.Values['website']);
+WriteLn('Genre: '+List.Values['genre']);
+
+List.Free;
+
+Open the ConfigFile in Notepad to see how it looks. Here is how mine looked after editing:
+
+[Station information]
+station=MyTestStation
+website=http://www.mysite.com
+genre=Dance,Trance
+
+As you can see this can become very handy when you need to store data between script loops, or want permanent configuration settings that can be changed externally.
+
+3.4 Working with remote URL's
+Like any good media player, SAM is also able to play remote files and URL's.
+This can be static files like… 
+http://www.spacialaudio.com/products/mp3PRO/24mp3PRO.mp3
+
+Or actual live broadcast streams like…
+http://205.188.234.38:8002
+
+This can become very useful for syndication - you can either directly relay another show, or maybe play a newscast located on a remote server.
+
+Here is an example script that can be used to relay a remote show.
+{ About:
+   This script will play a remote show inside SAM
+   The show starts at a specified time, and then ends at
+   another specified time.
+   
+   The script also contains some error-correction code
+   that will attempt to connect to the stream up to 20 times
+   in case it goes down. We schedule one song between each attempt.
+
+   Usage:
+    a) Compile configuration below and start PAL script.
+    b) If this show is only in certain days you will need to modify the script to
+       only queue the show up during these days.
+       See the DayOfWeek function.
+}
+{ CONFIGURATION }
+{==================================================}
+const ShowURL   = 'http://205.188.234.38:8002/';
+const StartTime = '01:01:00';
+const EndTime   = '01:05:00';
+
+{ IMPLEMENTATION }
+{--------------------------------------------------}
+var T : Integer;
+PAL.Loop := True;
+
+{Wait for the show to start}
+PAL.WaitForTime(StartTime);
+
+{Add show to queue}
+Queue.Clear;
+Queue.AddURL(ShowURL,ipTop);
+
+{Fade to show}
+ActivePlayer.FadeToNext;
+
+{Precautions - if there is a brief disconnect or server problem,
+then we would want to retry a few times to get back to the show.
+To do this we place the URL quite a few times in the queue, followed
+by some normal programming. That way we will try and reconnect until
+the end of the show}
+
+T := 0;
+while T < 20 do
+begin
+  Queue.AddURL(ShowURL,ipBottom);
+  CAT['Tracks'].QueueBottom(smLRP,EnforceRules);
+  T := T + 1;
+end;
+
+{Wait for show to end}
+PAL.WaitForTime(EndTime);
+
+{Clear queue}
+Queue.Clear;
+
+{Fade to normal programming}
+ActivePlayer.FadeToNext;
+
+{--------------------------------------------------}
+
+Few notes on URLs:
+SAM does unfortunately NOT use mime types to decide what content type a stream is. Instead it looks at the filename.  Any URL ending with an ".ogg" extension is considered an Ogg/Vorbis stream.  Any URL starting with mms:// is considered a WMA stream. Important - even if you have a WMA url starting with http:// and ending in .wma, you must use the mms protocol.
+For example this will not play in SAM:
+http://www.spacialaudio.com/promote/samlaunch.wma
+but this will!
+mms://www.spacialaudio.com/promote/samlaunch.wma
+
+Any other HTTP URL is automatically detected as an MP3 audio stream.
+
+3.5 Working with categories
+
+Refreshing from directories
+Consider the problem where you have a lot of artists uploading their music via FTP to a certain directory. What more, you have a co-worker that uploads the hourly news to a certain directory a few minutes before the news should air. Another co-worker uploads advertisements, promos, jingles and other station content.  Sure you can easily manage this manually with SAM - but why if it is easy to automate completely with PAL.
+
+For this example assume the following directories exist on the system:
+c:\content\newmusic
+c:\content\news\
+c:\content\jingles\
+c:\content\promos\
+c:\content\advertisements\
+
+The script:
+PAL.Loop := True;
+PAL.WaitForTime('XX:55:00');
+
+{First scan all the directories for files
+This will
+a) Remove files that no longer exist from the media library
+b) Add any new files found to the media library
+- Note: The files by default will be added to the Music (All) category, unless they contain tags that sorts them into other categories via songtype}
+
+DIR['c:\content\newmusic'].Rescan;
+DIR['c:\content\news\'].Rescan;
+DIR['c:\content\jingles\'].Rescan;
+DIR['c:\content\promos\'].Rescan;
+DIR['c:\content\advertisements\'].Rescan;
+
+
+{Now that the songs are in the media library, we
+need to add them to the correct categories.
+Some content like news also needs to be added to
+multiple categories to ensure that we set the correct songtype,
+as well as other attributes - like play limit.
+See "Understanding categories" for details about this.}
+
+{Add new music}
+CAT['NewMusic'].Clear;
+CAT['NewMusic'].AddDir('c:\content\newmusic',False,ipBottom);
+
+{Add news}
+CAT['HourlyNews'].Clear;
+CAT['HourlyNews'].AddDir('c:\content\news',False,ipBottom);
+CAT['News (All)'].AddDir('c:\content\news',False,ipBottom);
+CAT['Play once and remove'].AddDir('c:\content\news',False,ipBottom);
+
+{Add jingles}
+CAT['MyJingles'].Clear;
+CAT['MyJingles'].AddDir('c:\content\jingles',False,ipBottom);
+CAT['Jingles (All)'].AddDir('c:\content\jingles',False,ipBottom);
+
+{Add promos}
+CAT['MyPromos'].Clear;
+CAT['MyPromos'].AddDir('c:\content\promos',False,ipBottom);
+CAT['Promos (All)'].AddDir('c:\content\promos',False,ipBottom);
+
+{Add promos}
+CAT['MyAdz'].Clear;
+CAT['MyAdz'].AddDir('c:\content\advertisements',False,ipBottom);
+CAT['Advertisements (All)'].AddDir('c:\content\advertisements',False,ipBottom);
+
+Pay close attention on how we add the same files to multiple categories so they can inherit certain properties.
+
+
+Copy categories
+Here is a simple script to copy one category to another category:
+
+const Cat_From = 'MyCat1';
+const Cat_To   = 'MyCat2';
+
+var Q : TDataSet;
+var T : Integer;
+
+Q := CAT[Cat_From].SongList;
+
+{Empty destination category}
+CAT[Cat_To].Clear;
+
+PAL.LockExecution;
+Q.First;
+while not Q.EOF do
+begin
+ CAT[Cat_To].AddFile(Q['filename'],ipBottom);
+ Q.Next;
+ 
+ {Take a breather}
+ if (T mod 10) = 0 then PAL.UnlockExecution;
+ if (T mod 10) = 0 then PAL.LockExecution;
+ T := T + 1;
+ {----------------}
+end;
+PAL.UnlockExecution;
+
+Selecting songs
+Usually when songs are selected for rotation they are put directly in the queue. However, what if you wanted to do some extra processing based on the song? Sure you can detect the songs as they are queued up in the players (as we have done earlier), but what if you wanted to reject some songs before they get queued? The answer is to select the songs directly from the categories and store the result.
+
+Below is a partial example of how this could be done - you just need to supply your own logic code.
+
+var Song : TSongInfo;
+
+{Select song from category using LeatRecentlyPlayed logic and enforce the playlist rules}
+Song := CAT['Tracks'].ChooseSong(smLRP,EnforceRules);
+if Song <> nil then
+ begin
+   {Verify that song is of expected type. Replace this
+    part with your own logic}
+   if Song['songtype'] = 'S' then
+     {Finally, add it to the queue of allowed}
+     Queue.Add(Song,ipBottom);
+ end;
+
+Shuffle/Sort
+To randomize a category, simply go
+
+CAT['Tracks'].Shuffle;
+
+Remember that you might need to refresh the display in SAM to see the results.  You can also sort any category according to a database field.
+
+CAT['Tracks'].Sort('album',true);
+
+Section 4 - Festerhead, the PAL guru's creations
+
+If there is anyone that took full advantage of the power PAL to push his station into the future, FesterHead (aka Steve Kunitzer) is the one person I think of.
+Not only has he harnessed the power of PAL, but he made most of his efforts public. You will also see him post on the SpacialAudio forums on a regular basis giving PAL advice whenever he can. Festerhead has truly become a hero of PAL.
+
+It is thus with great pleasure that I present some of his many creations as examples of what can be done with a bit of imagination and perseverance.
+You can find a complete list of his public PAL scripts on his website:
+http://www.festerhead.com/samweb/pals.php
+
+If you use any of his scripts, please show your thanks! Send the guy a cold beer, money, postcard or just an email to say thank you.
+Or support his station: http://www.festerhead.com/forums/viewtopic.php?t=4
+
+Festerhead Category Processing Script 
+{
+  Don't be a loser.  Leave this here.
+  Categories script by FesterHead (aka Steve Kunitzer)
+  $Id: categories.pal,v 1.10 2005/04/18 03:08:05 FesterHead Exp $
+
+  What this PAL does:
+    * Cleans out and populates categories to play more requested songs
+      * Top requests for all time
+      * Top requests for the past 30 days
+      * Top requests for the past 7 days
+    * Cleans out and populates category for instrumental songs
+    * Cleans out and populates categories for ratings
+      * Exellent (more than one 5 vote and rating >= 4.5)
+      * Good (more than one vote and rating is >= 4 and < 5)
+
+  What is configurable:
+    * Toggle debug mode
+    * Toggle memory leak warning
+    * Top requests for all time
+      * Category name
+      * Category song limit
+      * Category processing run time
+    * Top requests for the past 30 days
+      * Category name
+      * Category song limit
+      * Category processing run time
+    * Top requests for the past 7 days
+      * Category name
+      * Category song limit
+      * Category processing run time
+    * Instrumental songs
+      * Category name
+      * Category song limit
+      * Category processing run time
+    * Ratings songs
+      * Category names
+      * Category song limits
+      * Category processing run time
+
+  Schedule this PAL with SAMs Event Scheduler (ES):
+    * Switch to a desktop with the ES visible
+      OR
+      Make the ES visible by clicking the 'Window' menu item and selecting 'Event Scheduler'
+
+    * Click '+' (Add new scheduled event)
+
+    * Enter a name such as 'Categories Processing'
+
+    * 'Event action' tab:
+      * Under 'Action' click 'Execute PAL script'
+      * In the 'PAL Script' section, click the folder icon and navigate to this script
+
+    * 'Scheduled times' tab:
+      * For a one time event:
+        * Select the 'Execute one' button
+        * Adjust the date/time
+        * Click '+ Add'
+        * Repeat as necessary for extra one time events
+      * For recurring events:
+        * Select the 'Execute every' button
+        * Adjust date/time
+        * Click '+ Add'
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  For my station, this PAL runs at 1:00AM every day
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Make the PAL run fast!
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Turns on memory leak warning
+}
+var debugOn : Boolean = false;
+
+{
+  Enable memory leak warning?
+  Automatically enabled if debugOn is true
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Not really a configurable, but it's going here anyway.
+  Used for determining when to run.
+}
+var theYear : Integer = 0;
+var theMonth : Integer = 0;
+var theDay : Integer = 0;
+DecodeDate(now, theYear, theMonth, theDay);
+
+{
+  Top All Time requests section
+}
+var topAllTime : String = 'Top Songs All Time Files';
+var topAllTimeLimit : Integer = 1500;
+var topAllTimeRun : Boolean = ((theDay = 1) or (theDay = 15));
+
+{
+  Top 30 Days requests section
+}
+var top30Days : String = 'Top Songs 30 Days Files';
+var top30DaysLimit : Integer = 1000;
+var top30DaysRun : Boolean = (DayOfWeek(now) = Sunday);
+
+{
+  Top 7 Days requests section
+}
+var top7Days : String = 'Top Songs 7 Days Files';
+var top7DaysLimit : Integer = 500;
+var top7DaysRun : Boolean = ((DayOfWeek(now) = Monday) or (DayOfWeek(now) = Wednesday) or (DayOfWeek(now) = Friday));
+
+{
+  Instrumental songs section
+}
+var instrumental : String = 'Instrumental Hour Files';
+var instrumentalLimit : Integer = 9999;
+var instrumentalRun : Boolean = (theDay = 1);
+
+{
+  Ratings section
+}
+var ratingsExcellent : String = 'Ratings 5 - Excellent';
+var ratingsExcellentLimit : Integer = 1000;
+var ratingsExcellentRun : Boolean = ((theDay = 1) or (theDay = 15));
+
+var ratingsGood : String = 'Ratings 4 - Good';
+var ratingsGoodLimit : Integer = 1000;
+var ratingsGoodRun : Boolean = ((theDay = 1) or (theDay = 15));
+
+{
+  Is this cool or what?
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Declare variables
+var theSongList, categoryData : TDataSet;
+
+if (debugOn or memoryLeakAlwaysOn) then
+  begin
+    PAL.MemoryLeakWarning := true;
+    WriteLn('Memory leak warning is ON');
+  end;
+
+if (topAllTimeRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + topAllTime);
+
+    WriteLn('Finding ' + topAllTime + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(topAllTime),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT songlist.ID, count(*) AS cnt ' +
+                         'FROM songlist, requestlist ' +
+                         'WHERE songlist.ID = requestlist.songID ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'AND (requestlist.status = ''played'' or requestlist.status = ''ignored'') ' +
+                         'GROUP BY songlist.ID ' +
+                         'ORDER BY cnt DESC, requestlist.t_stamp ASC ' +
+                         'LIMIT ' + IntToStr(topAllTimeLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while not theSongList.EOF do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['ID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+if (top30DaysRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + top30Days);
+
+    WriteLn('Finding ' + top30Days + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(top30Days),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT songlist.ID, count(*) AS cnt ' +
+                         'FROM songlist, requestlist ' +
+                         'WHERE songlist.ID = requestlist.songID ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'AND (requestlist.status = ''played'' or requestlist.status = ''ignored'') ' +
+                         'AND requestlist.t_stamp > ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', date() - 30)) + ' ' +
+                         'AND requestlist.t_stamp < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', now)) + ' ' +
+                         'GROUP BY songlist.ID ' +
+                         'ORDER BY cnt DESC, requestlist.t_stamp ASC ' +
+                         'LIMIT ' + IntToStr(top30DaysLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while not theSongList.EOF do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['ID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+if (top7DaysRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + top7Days);
+
+    WriteLn('Finding ' + top7Days + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(top7Days),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT songlist.ID, count(*) AS cnt ' +
+                         'FROM songlist, requestlist ' +
+                         'WHERE songlist.ID = requestlist.songID ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'AND (requestlist.status = ''played'' or requestlist.status = ''ignored'') ' +
+                         'AND requestlist.t_stamp > ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', date() - 7)) + ' ' +
+                         'AND requestlist.t_stamp < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', now)) + ' ' +
+                         'GROUP BY songlist.ID ' +
+                         'ORDER BY cnt DESC, requestlist.t_stamp ASC ' +
+                         'LIMIT ' + IntToStr(top7DaysLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while not theSongList.EOF do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['ID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+if (instrumentalRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + instrumental);
+
+    WriteLn('Finding ' + instrumental + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(instrumental),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT songlist.ID ' +
+                         'FROM songlist ' +
+                         'WHERE songlist.lyrics like ''Instrumental%'' ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'LIMIT ' + IntToStr(instrumentalLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while not theSongList.EOF do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['ID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+if (ratingsExcellentRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + ratingsExcellent);
+
+    WriteLn('Finding ' + ratingsExcellent + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(ratingsExcellent),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT count(*) as cnt, song_rating.songID ' +
+                         'FROM song_rating, songlist '+
+                         'WHERE song_rating.rating = 5 ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'AND songlist.rating >= 4.5 ' +
+                         'AND song_rating.songID = songlist.ID ' +
+                         'GROUP BY songID ' +
+                         'ORDER BY cnt DESC ' +
+                         'LIMIT ' + IntToStr(ratingsExcellentLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while ((not theSongList.EOF) and (theSongList['cnt'] > 1)) do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['songID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+if (ratingsGoodRun) then
+  begin
+    WriteLn('************************');
+
+    WriteLn('Processing ' + ratingsGood);
+
+    WriteLn('Finding ' + ratingsGood + ' ID');
+    categoryData := Query('SELECT id ' +
+                          'FROM category ' +
+                          'WHERE name = ' + QuotedStr(ratingsGood),[], true);
+    WriteLn('Found ID: ' + IntToStr(categoryData['id']));
+
+    WriteLn('Clearing category');
+    ExecSQL('DELETE FROM categorylist WHERE categoryID = ' + IntToStr(categoryData['id']),[]);
+
+    WriteLn('Gathering category');
+    theSongList := Query('SELECT songlist.ID ' +
+                         'FROM songlist ' +
+                         'WHERE songlist.rating < 5 and songlist.rating >= 4 ' +
+                         'AND songlist.songtype = ''S'' ' +
+                         'ORDER BY songlist.rating desc, songlist.votes desc ' +
+                         'LIMIT ' + IntToStr(ratingsGoodLimit), [], true);
+
+    WriteLn('Updating category');
+    theSongList.First;
+    while not theSongList.EOF do
+      begin
+        ExecSQL('INSERT into categorylist (songID, categoryID) VALUES (' + IntToStr(theSongList['ID']) +  ', ' + IntToStr(categoryData['id']) + ')',[]);
+        theSongList.Next;
+      end;
+
+    WriteLn('Pau');
+  end;
+
+PAL.UnlockExecution;
+
+theSongList.Free;
+categoryData.Free;
+
+{
+  **************
+  * Change log *
+  **************
+
+  $Log: categories.pal,v $
+  Revision 1.10  2005/04/18 03:08:05  FesterHead
+  Added request status check of 'ignored' to account for points and folks being able to request songs without them going into the queue.
+
+  Revision 1.9  2005/04/17 03:12:19  FesterHead
+  Increase top all time, top monthly, and top weekly counts
+
+  Revision 1.8  2005/01/20 05:26:59  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.7  2005/01/14 16:08:55  FesterHead
+  Songs must have at least 4.5 rating to be considered for Ratings 5 - Excellent
+
+  Revision 1.6  2005/01/13 07:24:06  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.5  2004/11/11 06:41:46  FesterHead
+  Changed restriction criteria from DESC to ASC
+  Earlier songs are returned before later songs
+
+  Revision 1.4  2004/08/15 02:03:53  FesterHead
+  Ratings 5 - Excellent category needs at least two 5 votes for consideration (independent of over-all rating).
+  Used to be any song with a 5 rating.
+
+  Revision 1.3  2004/07/04 01:38:50  FesterHead
+  Removed number of ratings restriction from ratings gatherers.
+
+  Revision 1.2  2004/07/03 18:58:47  FesterHead
+  Added ratings processing
+
+  Revision 1.1  2004/05/15 06:15:25  FesterHead
+  Initial commit - RCS to CVS migration
+}
+
+
+Festerhead Request Processing Script 
+{
+  Don't be a loser.  Leave this here.
+  Request script by FesterHead (aka Steve Kunitzer)
+  $Id: request.pal,v 1.14 2005/04/23 05:39:49 FesterHead Exp $
+
+  What this PAL does:
+    * Constantly looks at the bottom of the queue for a request and:
+      * If twofers enabled, makes requests twofers
+      * If threefers enabled, makes requests threefers
+      * If useExtra enabled, add in random song from random category to space out requests
+    * This PAL won't work if your station doesn't place requests at the bottom of the queue
+    * All added songs go to the bottom of the queue after the request
+
+  What is configurable:
+    * Toggle twofers
+    * Toggle threefers
+    * Toggle useExtra
+    * useExtraWait to space out extra additions
+    * List of categories to select candidates
+    * Percentage weights for list of categories
+    * Rule selection for list of categories
+
+  PAL built to run continuously:
+    * Switch to a desktop with the 'PAL Scripts' window visible
+      OR
+      Make the ES visible by Clicking the 'Window' menu item and selecting 'PAL Scripts'
+
+    * Click '+' (Add new PAL script)
+
+    * Check the 'Automatically start script' box
+
+    * Click the folder icon and navigate to this script
+
+    * Click 'OK'
+
+    * Highlight PAL and click 'Start selected PAL script' (VCR type play button)
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Make the PAL run fast!
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Do you use Twofers?
+}
+var useTwofers : Boolean = true;
+
+{
+  Do you use Threefers?
+}
+var useThreefers : Boolean = false;
+
+{
+  Throw an extra random song after a request?
+}
+var useExtra : Boolean = false;
+
+{
+  How many requests to wait before using useExtra?
+  Don't set less than 0
+}
+var useExtraWait : Integer = 3;
+
+{
+  Define the categories to pick song candidates from
+  Default is for my station in particular and uses 'Categories Processing' PAL
+  See below for setting thePercentages
+}
+var theCategories : Array of String = ['Top Songs All Time Files', 'Top Songs 30 Days Files', 'Top Songs 7 Days Files', 'Ratings 5 - Excellent', 'Ratings 4 - Good'];
+
+{
+  Define the percentages of each category
+  These need to add to 100.  Use a calculator if necessary
+  The order here corresponds to the order of theCategories above
+}
+var thePercentages : Array of Integer = [30, 25, 20, 15, 10];
+
+{
+  Define the choosing methods of each category
+  The order here corresponds to the order of theCategories above
+}
+var theChoosers : Array of Integer = [smRandom, smRandom, smRandom, smRandom, smRandom];
+
+{
+  Define the enforcing methods of each category
+  The order here corresponds to the order of theCategories above
+}
+var theEnforcers : Array of Boolean = [EnforceRules, EnforceRules, EnforceRules, EnforceRules, EnforceRules];
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Declare variables
+var queueBottom, theCountSongs, theSongChooser : TDataSet;
+var categoryToUse : String = '';
+var randomInteger : Integer = 0;
+var theCategory : String = '';
+var theChooser : Integer = smRandom;
+var theEnforcer : Boolean = EnforceRules;
+var looper : Integer = 0;
+var accumulator : Integer = 0;
+var found : Boolean = false;
+var arraysSameLength : Boolean = false;
+var useExtraCounter : Integer = 0;
+var tempID : Integer = 0;
+
+// Check to see the arrays have the same length
+if ((theCategories.length = thePercentages.length) and
+    (thePercentages.length = theChoosers.length) and
+    (theChoosers.length = theEnforcers.length)) then
+  begin
+    arraysSameLength := true;
+  end
+else
+  begin
+    ErrorDlg('Arrays do not have the same length.');
+  end;
+
+// Song restriction checking
+var hourRestriction : Float = Round(Int(PlaylistRules.MinSongTime / 60));
+var minRestriction : Float = Round(PlaylistRules.MinSongTime - (hourRestriction * 60));
+
+{
+  Temporary hour restriction bug fix
+  PAL cannot encode times greater that 23:59:59
+  If hourRestriction > 23 then hourRestriction = 23
+  Some of you folks got some pretty mean song restriction rules!
+  This isn't a critical bug.  It may never get fixed.
+}
+if (hourRestriction > 23) then
+  begin
+    hourRestriction := 23;
+  end;
+
+// Randomize!
+Randomize;
+
+PAL.UnlockExecution;
+
+while (arraysSameLength) do
+  begin
+    queueBottom := Query('SELECT queuelist.requestID, queuelist.songID, songlist.title, songlist.artist, songlist.album from queuelist, songlist where queuelist.songID = songlist.ID ORDER BY sortID DESC LIMIT 1', [], true);
+
+    if queueBottom.EOF <> True then
+      if queueBottom['requestID'] > 0 then
+        begin
+          // update song time restriction
+          hourRestriction := Round(Int(PlaylistRules.MinSongTime / 60));
+          minRestriction := Round(PlaylistRules.MinSongTime - (hourRestriction * 60));
+
+          if ((DayOfWeek(Now) = Tuesday) and (useTwofers)) then
+            {
+              Insert another song by same artist to preserve twofers
+              If another song not available, then add a random tune
+            }
+            begin
+              // Let's get a count of the remaining songs by this artist
+              theCountSongs := Query('SELECT COUNT(*) AS cnt ' +
+                                     'FROM songlist ' +
+                                     'WHERE id <> ' + IntToStr(queueBottom['songID']) + ' ' +
+                                     'AND title <> ' + QuotedStr(queueBottom['title']) + ' ' +
+                                     'AND artist = ' + QuotedStr(queueBottom['artist']) + ' ' +
+                                     'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hourRestriction)+':'+FloatToStr(minRestriction)+':00'])) + ' ' +
+                                     'AND songtype = ''S''', [], true);
+              WriteLn('There are ' + IntToStr(theCountSongs['cnt']) + ' songs to choose from');
+              WriteLn('');
+              if (theCountSongs['cnt'] = 0) then
+                begin
+                  WriteLn('ZERO songs to choose from!');
+                  WriteLn('Adding one random song');
+
+                  // Generate a random number
+                  randomInteger := RandomInt(100) + 1;
+                  WriteLn('Random number = ' + IntToStr(randomInteger));
+
+                  found := false;
+                  // Select a category
+                  // Loop through theCategories and find the one to use
+                  for looper := 0 to theCategories.length-1 do
+                    begin
+                      // Accumulate the accumulator
+                      accumulator := accumulator + thePercentages[looper];
+
+                      // This the one to use?
+                      if ((randomInteger <= accumulator) and (not found)) then
+                        begin
+                          theCategory := theCategories[looper];
+                          theChooser := theChoosers[looper];
+                          theEnforcer := theEnforcers[looper];
+                          found := true;
+                        end;
+                    end;
+                  WriteLn('Using ' + theCategory);
+                  CAT[theCategory].QueueBottom(theChooser, theEnforcer);
+                end
+              else
+                begin
+                  WriteLn('Choosing random song...');
+                  // Choose a random song from the remaining songs by this artist
+                  theSongChooser := Query('SELECT title, filename ' +
+                                          'FROM songlist ' +
+                                          'WHERE id <> ' + IntToStr(queueBottom['songID']) + ' ' +
+                                          'AND title <> ' + QuotedStr(queueBottom['title']) + ' ' +
+                                          'AND artist = ' + QuotedStr(queueBottom['artist']) + ' ' +
+                                          'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hourRestriction)+':'+FloatToStr(minRestriction)+':00'])) + ' ' +
+                                          'AND songtype = ''S'' ' +
+                                          'ORDER BY RAND() LIMIT 1', [], true);
+                  // Put random song in queue bottom
+                  Queue.AddFile(theSongChooser['filename'],ipBottom);
+                  WriteLn('Added: ' + QuotedStr(queueBottom['artist']));
+                  WriteLn('  ' + QuotedStr(theSongChooser['title']));
+                  WriteLn('');
+                end;
+            end
+          else if ((DayOfWeek(Now) = Thursday) and (useThreefers)) then
+            {
+              Insert two songs by same artist to preserve threefers
+              If two songs not available, then add a random tune
+              We may need to insert two, but one is good enough for me
+            }
+            begin
+              // Let's get a count of the remaining songs by this artist
+              theCountSongs := Query('SELECT COUNT(*) AS cnt ' +
+                                     'FROM songlist ' +
+                                     'WHERE id <> ' + IntToStr(queueBottom['songID']) + ' ' +
+                                     'AND title <> ' + QuotedStr(queueBottom['title']) + ' ' +
+                                     'AND artist = ' + QuotedStr(queueBottom['artist']) + ' ' +
+                                     'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hourRestriction)+':'+FloatToStr(minRestriction)+':00'])) + ' ' +
+                                     'AND songtype = ''S''', [], true);
+              WriteLn('There are ' + IntToStr(theCountSongs['cnt']) + ' songs to choose from');
+              WriteLn('');
+              if (theCountSongs['cnt'] < 2) then
+                begin
+                  WriteLn('Less than two songs to choose from!');
+                  WriteLn('Adding two random songs');
+
+                  // Generate a random number
+                  randomInteger := RandomInt(100) + 1;
+                  WriteLn('Random number = ' + IntToStr(randomInteger));
+
+                  found := false;
+                  // Select a category
+                  // Loop through theCategories and find the one to use
+                  for looper := 0 to theCategories.length-1 do
+                    begin
+                      // Accumulate the accumulator
+                      accumulator := accumulator + thePercentages[looper];
+
+                      // This the one to use?
+                      if ((randomInteger <= accumulator) and (not found)) then
+                        begin
+                          theCategory := theCategories[looper];
+                          theChooser := theChoosers[looper];
+                          theEnforcer := theEnforcers[looper];
+                          found := true;
+                        end;
+                    end;
+                  WriteLn('Using ' + theCategory);
+                  CAT[theCategory].QueueBottom(theChooser, theEnforcer);
+
+                  // Generate a random number
+                  randomInteger := RandomInt(100) + 1;
+                  WriteLn('Random number = ' + IntToStr(randomInteger));
+
+                  found := false;
+                  // Select a category
+                  // Loop through theCategories and find the one to use
+                  for looper := 0 to theCategories.length-1 do
+                    begin
+                      // Accumulate the accumulator
+                      accumulator := accumulator + thePercentages[looper];
+
+                      // This the one to use?
+                      if ((randomInteger <= accumulator) and (not found)) then
+                        begin
+                          theCategory := theCategories[looper];
+                          theChooser := theChoosers[looper];
+                          theEnforcer := theEnforcers[looper];
+                          found := true;
+                        end;
+                    end;
+                  WriteLn('Using ' + theCategory);
+                  CAT[theCategory].QueueBottom(theChooser, theEnforcer);
+                end
+              else
+                begin
+                  WriteLn('Choosing two random songs...');
+                  // Choose a random song from the remaining songs by this artist
+                  theSongChooser := Query('SELECT title, filename ' +
+                                          'FROM songlist ' +
+                                          'WHERE id <> ' + IntToStr(queueBottom['songID']) + ' ' +
+                                          'AND title <> ' + QuotedStr(queueBottom['title']) + ' ' +
+                                          'AND artist = ' + QuotedStr(queueBottom['artist']) + ' ' +
+                                          'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hourRestriction)+':'+FloatToStr(minRestriction)+':00'])) + ' ' +
+                                          'AND songtype = ''S'' ' +
+                                          'ORDER BY RAND() LIMIT 2', [], true);
+                  // Put the two random songs in queue bottom
+                  theSongChooser.First;
+                  while not theSongChooser.EOF do
+                    begin
+                      Queue.AddFile(theSongChooser['filename'],ipBottom);
+                      WriteLn('Added: ' + QuotedStr(queueBottom['artist']));
+                      WriteLn('  ' + QuotedStr(theSongChooser['title']));
+                      WriteLn('');
+                      // Move the pointer to the next song
+                      theSongChooser.Next;
+                    end;
+                end;
+            end
+          else if (useExtra and (useExtraWait = useExtraCounter)) then
+            begin
+              WriteLn('Adding one random song');
+
+              // Reset useExtraCounter
+              WriteLn('Resetting useExtraCounter');
+              useExtraCounter := 0;
+
+              // Generate a random number
+              randomInteger := RandomInt(100) + 1;
+              WriteLn('Random number = ' + IntToStr(randomInteger));
+
+              found := false;
+              // Select a category
+              // Loop through theCategories and find the one to use
+              for looper := 0 to theCategories.length-1 do
+                begin
+                  // Accumulate the accumulator
+                  accumulator := accumulator + thePercentages[looper];
+
+                  // This the one to use?
+                  if ((randomInteger <= accumulator) and (not found)) then
+                    begin
+                      theCategory := theCategories[looper];
+                      theChooser := theChoosers[looper];
+                      theEnforcer := theEnforcers[looper];
+                      found := true;
+                    end;
+                end;
+              WriteLn('Using ' + theCategory);
+              CAT[theCategory].QueueBottom(theChooser, theEnforcer);
+            end
+          else
+            begin
+              if (tempID <> queueBottom['songID']) then
+                begin
+                  // Reset tempID
+                  tempID := queueBottom['songID'];
+
+                  // Increment useExtraCounter
+                  useExtraCounter := useExtraCounter + 1;
+                  WriteLn('useExtraCounter = ' + IntToStr(useExtraCounter));
+                end;
+            end;
+        end;
+
+      // Free up data structures
+      queueBottom.Free;
+      theCountSongs.Free;
+      theSongChooser.Free;
+      CAT.Free;
+      Queue.Free;
+  end;
+
+{
+  **************
+  * Change log *
+  **************
+
+  $Log: request.pal,v $
+  Revision 1.14  2005/04/23 05:39:49  FesterHead
+  Turned off useExtra
+
+  Revision 1.13  2005/01/25 05:02:21  FesterHead
+  Added useExtraWait to space out extra additions
+
+  Revision 1.12  2005/01/20 05:27:00  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.11  2005/01/13 07:24:06  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.10  2004/10/10 03:48:36  FesterHead
+    Temporary hour restriction bug fix
+    PAL cannot encode times greater that 23:59:59
+    If hourRestriction > 23 then hourRestriction = 23
+    Some of you folks got some pretty mean song restriction rules!
+    This isn't a critical bug.  It may never get fixed.
+
+  Revision 1.9  2004/07/08 04:35:30  FesterHead
+  Disabled threefer requests since Thursday is retasked
+
+  Revision 1.8  2004/07/04 02:03:54  FesterHead
+  Removed expanded Lock/Unlock
+  I'd rather have the previous control back for my own sanity
+
+  Revision 1.7  2004/07/04 01:59:20  FesterHead
+  Fixed borked if-then-else
+  Expaned Lock/Unloock sections
+
+  Revision 1.6  2004/07/04 01:55:51  FesterHead
+  Added ratings categories
+  Added array length checking
+
+  Revision 1.5  2004/06/24 16:24:07  FesterHead
+  Fixed ANOTHER typo in time restriction reset
+  *sheesh*
+
+  Revision 1.4  2004/06/24 16:22:43  FesterHead
+  Fixed typo in time restriction reset
+
+  Revision 1.3  2004/06/24 16:20:58  FesterHead
+  Added time restriction recalculation
+  Added lock/unlock around configurables and initializers
+
+  Revision 1.2  2004/06/24 16:12:50  FesterHead
+  Added song request time restriction to song selection statements
+
+  Revision 1.1  2004/05/15 06:15:25  FesterHead
+  Initial commit - RCS to CVS migration
+
+}
+
+
+Festerhead Twofers Script
+{
+  Don't be a loser.  Leave this here.
+  
+  Twofer script by FesterHead (aka Steve Kunitzer)
+  $Id: twofer.pal,v 1.4 2005/01/20 05:26:59 FesterHead Exp $
+
+  What this PAL does:
+    * Plays twofers
+      * artist(2), artist(2), artist(2), ...
+
+  What is configurable:
+    * Toggle debug mode
+    * Toggle memory leak warning
+    * Show updating title, description, and resets
+    * Day(s) to run twofers
+    * Categories to select songs
+    * Percentage weights for list of categories
+    * Rule selection for list of categories
+    * PAL id for automated schedule highlighting
+    * Wait count
+    * Maximum failure count before giving up
+    * Failure wait count
+    * Minimum songs available for twofer selection
+
+  Schedule this PAL with SAMs Event Scheduler (ES):
+    * Switch to a desktop with the ES visible
+      OR
+      Make the ES visible by clicking the 'Window' menu item and selecting 'Event Scheduler'
+
+    * Click '+' (Add new scheduled event)
+
+    * Enter a name such as 'Twofers'
+
+    * 'Event action' tab:
+      * Under 'Action' click 'Execute PAL script'
+      * In the 'PAL Script' section, click the folder icon and navigate to this script
+
+    * 'Scheduled times' tab:
+      * For a one time event:
+        * Select the 'Execute one' button
+        * Adjust the date/time
+        * Click '+ Add'
+        * Repeat as necessary for extra one time events
+      * For recurring events:
+        * Select the 'Execute every' button
+        * Adjust date/time
+        * Click '+ Add'
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  For my station, this PAL runs at 12:01AM every day
+
+  To handle requests as twofers, see 'Categories Processing' PAL
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Make the PAL run fast!
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Turns on memory leak warning
+  Default is false
+}
+var debugOn : Boolean = false;
+
+{
+  Enable memory leak warning?
+  Automatically enabled if debugOn is true
+  Default is false
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Define automatic show updating values
+  Defaults are for my station
+}
+var text1Update : String = 'Now playing: Twofers!';
+var text2Update : String = 'Back-to-back songs by your favorite artists';
+var text1Reset : String = 'Now playing: Regular schedule';
+var text2Reset : String = 'Normal rotation and listener requests';
+
+{
+  What days do you want the Twofers played?
+  If debugOn is true, then we run no matter what day is here
+  Default is Tuesday only
+}
+var theDays : Array of Integer = [Tuesday];
+
+{
+  Define the categories to pick song candidates from
+  See below for setting thePercentages
+  Default is for my station in particular and uses 'Categories Processing' PAL
+}
+var theCategories : Array of String = ['Top Songs 7 Days Files', 'Top Songs 30 Days Files', 'Top Songs All Time Files', 'Songs'];
+
+{
+  Define the percentages of each category
+  These need to add to 100.  Use a calculator if necessary
+  The order here corresponds to the order of theCategories above
+  Default is for my station
+}
+var thePercentages : Array of Integer = [20, 30, 40, 10];
+
+{
+  Define the choosing methods of each category
+  Default is for my station
+  The order here corresponds to the order of theCategories above
+}
+var theChoosers : Array of Integer = [smRandom, smRandom, smRandom, smRandom];
+
+{
+  Define the enforcing methods of each category
+  The order here corresponds to the order of theCategories above
+  Default is for my station
+}
+var theEnforcers : Array of Boolean = [EnforceRules, EnforceRules, EnforceRules, EnforceRules];
+
+{
+  Database table name for logging show history
+  Debug table automatically appended with '_debug'
+  Default is 'twofer' and 'twofer_debug' for debugOn
+}
+var tableName : String = 'twofer';
+
+{
+  Define the PAL ids for automated schedule page highlighting
+  Leave this alone if you don't have automated schedule page highlighting
+  Defaults are for my station
+}
+var idThisPAL : Integer = 1;
+var idResetPAL : Integer = 0;
+
+{
+  How many songs to wait before running the script again?
+  Check your SAM configuration for your setting
+  If you're not sure what to do here, leave this alone
+  Default is one more than minimum items to keep in the queue
+}
+var waitCount : Integer = PlaylistRules.MinQueueSize + 1;
+
+{
+  Use PAL.WaitForQueue instead of PAL.WaitForPlay?
+  If there are other regularly scheduled jingles, ads, and/or what-nots the queue could fill up with a lot of twofers if we use PAL.WaitForPlay
+  In my view, this is unacceptable
+  Feel free to set to false to use PAL.WaitForPlay and have fun
+  Watch your queue
+  Automatically switched to false if debugOn is true
+  Default is true
+}
+var useWaitForQueue : Boolean = true;
+
+{
+  Maximum times the script can fail to get a twofer before giving up
+  If gives up, it'll add the singleton song candidate
+  Don't set this too high
+  This is to prevent a runaway PAL script.
+  Default is 5
+}
+var maxFailures : Integer = 5;
+
+{
+  How many songs to wait if we fail to generate a twofer before restarting?
+  Default is 1 since we probably want to run again as soon as a song changes
+}
+var failureCountWait : Integer = 1;
+
+{
+  Maximum candidate matches required to consider a song as twoferable
+  After choosing a candidate, there needs to be this number of other songs to choose from
+  Don't set this too high or less than one
+  Default is 10
+}
+var minimumAvailable : Integer = 10;
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Declare variables
+var theCandidate : TSongInfo;
+var theSongChooser, currentShow : TDataSet;
+
+// Declare and initialize stuff
+var hours : Float = Round(Int(PlaylistRules.MinSongTime / 60));
+var mins : Float = Round(PlaylistRules.MinSongTime - (hours * 60));
+var randomInteger : Integer = 0;
+var song1 : Integer = -1;
+var song2 : Integer = -1;
+var counter : Integer = 0;
+var bad : Boolean = false;
+var good : Boolean = false;
+var runNow : Boolean = false;
+var theCategory : String = '';
+var theChooser : Integer = smRandom;
+var theEnforcer : Boolean = EnforceRules;
+var theSQL : String = '';
+var looper : Integer = 0;
+var accumulator : Integer = 0;
+var found : Boolean = false;
+
+// Randomize!
+Randomize;
+
+if (debugOn or memoryLeakAlwaysOn) then
+  begin
+    PAL.MemoryLeakWarning := true;
+    WriteLn('Memory leak warning is ON');
+  end;
+
+if (debugOn) then
+  begin
+    useWaitForQueue := false;
+    WriteLn('WaitForPlay is ON');
+  end;
+
+// Determine if we runNow.  Loop through theDays and find the one to use
+for looper := 0 to theDays.length-1 do
+  begin
+    // Run now?
+    if ((DayOfWeek(Now) = theDays[looper]) and (not runNow)) then
+      begin
+        runNow := true;
+        PAL.Loop := true;
+      end;
+  end;
+
+if (debugOn) then
+  begin
+    if (PAL.GetLoop) then
+      begin
+        WriteLn('PAL.Loop := true');
+      end
+    else
+      begin
+        WriteLn('PAL.Loop := false');
+      end;
+  end;
+
+if (not runNow) then
+  begin
+    PAL.Loop := false;
+  end;
+
+while ((counter < maxFailures) and (not good) and (runNow))  do
+  begin
+    // Setup automatic show updating
+    if (not debugOn) then
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS currentshow ' +
+                '(id MEDIUMINT(9), text1 VARCHAR(255), text2 VARCHAR(255))', []);
+
+        currentShow := Query('SELECT COUNT(*) AS cnt FROM currentshow', [], true);
+
+        // If no rows in currentshow, do an insert
+        // Else, do an update
+        if (currentShow['cnt'] = 0) then
+          begin
+            ExecSQL('INSERT INTO currentshow (id, text1, text2) ' +
+                    'VALUES (' + IntToStr(idThisPAL) + ', ' + QuotedStr(text1Update) + ', ' +
+                                 QuotedStr(text2Update) + ')', []);
+          end
+        else
+          begin
+            ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idThisPAL), []);
+            ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Update), []);
+            ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Update), []);
+          end;
+      end;
+
+    // Increment the number of times run
+    counter := counter + 1;
+    if (debugOn) then
+      begin
+        WriteLn('Counter = ' + IntToStr(counter));
+      end;
+
+    // Generate a random number
+    randomInteger := RandomInt(100) + 1;
+    if (debugOn) then
+      begin
+        WriteLn('Random number = ' + IntToStr(randomInteger));
+      end;
+
+    found := false;
+    // Select a category
+    // Loop through theCategories and find the one to use
+    for looper := 0 to theCategories.length-1 do
+      begin
+        // Accumulate the accumulator
+        accumulator := accumulator + thePercentages[looper];
+
+        // This the one to use?
+        if ((randomInteger <= accumulator) and (not found)) then
+          begin
+            theCategory := theCategories[looper];
+            theChooser := theChoosers[looper];
+            theEnforcer := theEnforcers[looper];
+            found := true;
+          end;
+      end;
+
+    // Grab a candidate
+    theCandidate := CAT[theCategory].ChooseSong(theChooser, theEnforcer);
+
+    if (theCandidate <> nil) then
+      begin
+        if (debugOn) then
+          begin
+            WriteLn('Potential candidate: ' + theCandidate['artist'] + ' --- ' + theCandidate['title']);
+          end;
+
+        song1 := theCandidate['id'];
+
+        if (debugOn) then
+          begin
+            WriteLn('Time restriction = ' + DateTimeToStr(T['-'+FloatToStr(hours)+':'+FloatToStr(mins)+':00']));
+          end;
+
+        // Do the query
+        theSongChooser := Query('SELECT COUNT(*) AS cnt ' +
+                                'FROM songlist ' +
+                                'WHERE id <> ' + IntToStr(theCandidate['id']) + ' ' +
+                                'AND title <> ' + QuotedStr(theCandidate['title']) + ' ' +
+                                'AND artist = ' + QuotedStr(theCandidate['artist']) + ' ' +
+                                'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hours)+':'+FloatToStr(mins)+':00'])) + ' ' +
+                                'AND songtype = ''S''', [], true);
+
+        if (debugOn) then
+          begin
+            WriteLn('There are ' + IntToStr(theSongChooser['cnt']) + ' songs to choose from');
+          end;
+
+        // Validate the count
+        // If less than minimumAvailable songs to choose from, candidate is a failure
+        if (theSongChooser['cnt'] < minimumAvailable) then
+          begin
+            if (debugOn) then
+              begin
+                WriteLn('Less than ' + IntToStr(minimumAvailable) + ' songs to choose from!  Counter = ' + IntToStr(counter) + '.  Starting over...');
+              end;
+
+            // Not good, but haven't reached maximum failure count
+            if (counter >= maxFailures) then
+              begin
+                // Failed to generate a twofer
+                bad := true;
+                WriteLn('Max failures reached!  Counter = ' + IntToStr(counter) + '.  Adding candidate and waiting ' + IntToStr(failureCountWait) + ' song(s)...');
+
+                // Add the candidate
+                if (not debugOn) then
+                  begin
+                    Queue.Add(theCandidate, ipBottom);
+                  end;
+              end;
+          end
+        // We have more than one song to choose from.  Candidate is a success.
+        else
+          begin
+            good := true;
+
+            // Do the query
+            theSongChooser := Query('SELECT artist, title, filename, id ' +
+                                    'FROM songlist ' +
+                                    'WHERE id <> ' + IntToStr(theCandidate['id']) + ' ' +
+                                    'AND title <> ' + QuotedStr(theCandidate['title']) + ' ' +
+                                    'AND artist = ' + QuotedStr(theCandidate['artist']) + ' ' +
+                                    'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(hours)+':'+FloatToStr(mins)+':00'])) + ' ' +
+                                    'AND songtype = ''S'' ' +
+                                    'ORDER BY RAND() LIMIT 1', [], true);
+
+            // Grab the song id
+            song2 := theSongChooser['id'];
+
+            // Put candidate and random song in queue bottom
+            if (not debugOn) then
+              begin
+                Queue.Add(theCandidate, ipBottom);
+                Queue.AddFile(theSongChooser['filename'], ipBottom);
+              end;
+
+            // Log the twofer to the screen
+            WriteLn('Added: ' + QuotedStr(theCandidate['artist']) + ' --- ' + QuotedStr(theCandidate['title']));
+            WriteLn('Added: ' + QuotedStr(theSongChooser['artist']) + ' --- ' + QuotedStr(theSongChooser['title']));
+
+            // Keeping separate just in case we want to log more
+            // stuff when in debugOn mode
+            if (debugOn) then
+              begin
+                // Create the table if it doesn't already exist
+                ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + '_debug ' +
+                        '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                        'date DATETIME, ' +
+                        'song1 MEDIUMINT(9), ' +
+                        'song2 MEDIUMINT(9), ' +
+                        'counter MEDIUMINT(9))', []);
+                ExecSQL('INSERT INTO ' + tableName + '_debug (date, song1, song2, counter) VALUES (''' +
+                        FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                        IntToStr(song1) + ', ' +
+                        IntToStr(song2) + ', ' +
+                        IntToStr(counter) + ')', []);
+              end
+            else
+              begin
+                // Create the table if it doesn't already exist
+                ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + ' ' +
+                        '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                        'date DATETIME, ' +
+                        'song1 MEDIUMINT(9), ' +
+                        'song2 MEDIUMINT(9), ' +
+                        'counter MEDIUMINT(9))', []);
+                ExecSQL('INSERT INTO ' + tableName + ' (date, song1, song2, counter) VALUES (''' +
+                        FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                        IntToStr(song1) + ', ' +
+                        IntToStr(song2) + ', ' +
+                        IntToStr(counter) + ')', []);
+              end;
+          end;
+      end
+    else
+      begin
+        WriteLn('NIL candidate.  That sucks.  Running again...');
+      end;
+  end;
+
+// Stop the PAL from running fast!
+PAL.UnlockExecution;
+
+// Do an action based on a bad or good twofer generation
+// Yes these are separate if-then statements.  Deal with it.
+if (bad and runNow) then
+  begin
+    if (debugOn) then
+      begin
+        WriteLn('Waiting for SAM to play ' + IntToStr(failureCountWait) + ' songs');
+      end;
+    PAL.WaitForPlayCount(failureCountWait);
+  end;
+if (good and runNow) then
+  begin
+    if (useWaitForQueue) then
+      begin
+        if (debugOn) then
+          begin
+            WriteLn('Waiting for queue to reach ' + IntToStr(waitCount) + ' songs');
+          end;
+        PAL.WaitForQueue(waitCount);
+      end
+    else
+      begin
+        if (debugOn) then
+          begin
+            WriteLn('Waiting for SAM to play ' + IntToStr(waitCount) + ' songs');
+          end;
+        PAL.WaitForPlayCount(waitCount);
+      end;
+  end;
+
+if (runNow and (not debugOn)) then
+  begin
+    // Reset the show
+    ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idResetPAL), []);
+    ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Reset), []);
+    ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Reset), []);
+  end;
+
+// Be nice...  Free up the data structures
+theSongChooser.Free;
+theCandidate.Free;
+currentShow.Free;
+Queue.Free;
+CAT.Free;
+
+{
+  **************
+  * Change log *
+  **************
+
+  $Log: twofer.pal,v $
+  Revision 1.4  2005/01/20 05:26:59  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.3  2005/01/13 07:24:06  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.2  2004/05/16 05:28:39  FesterHead
+  Removed show update toggle.  It's always on.  Deal with it.
+  Removed show history toggle.  It's always on.  Deal with it.
+
+  Revision 1.1  2004/05/15 06:15:25  FesterHead
+  Initial commit - RCS to CVS migration
+
+}
+
+Festerhead Play Top 10 Requests Script
+{
+  Don't be a loser.  Leave this here.
+  
+  Top ten requests for the past 7 days script by FesterHead (aka Steve Kunitzer)
+  $Id: top-ten-requests-past-7-days.pal,v 1.10 2005/04/18 03:08:05 FesterHead Exp $
+
+  What this PAL does:
+    * Plays top ten requests for the past 7 days
+
+  What is configurable:
+    * Toggle debug mode
+    * Toggle memory leak warning
+    * Show updating title, description, and resets
+    * PAL id for automated schedule highlighting
+
+  Schedule this PAL with SAMs Event Scheduler (ES):
+    * Switch to a desktop with the ES visible
+      OR
+      Make the ES visible by clicking the 'Window' menu item and selecting 'Event Scheduler'
+
+    * Click '+' (Add new scheduled event)
+
+    * Enter a name such as 'Top Ten Requests Past 7 Days'
+
+    * 'Event action' tab:
+      * Under 'Action' click 'Execute PAL script'
+      * In the 'PAL Script' section, click the folder icon and navigate to this script
+
+    * 'Scheduled times' tab:
+      * For a one time event:
+        * Select the 'Execute one' button
+        * Adjust the date/time
+        * Click '+ Add'
+        * Repeat as necessary for extra one time events
+      * For recurring events:
+        * Select the 'Execute every' button
+        * Adjust date/time
+        * Click '+ Add'
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  To see when this PAL is scheduled for my station, see http://www.festerhead.com/samweb/schedule.php
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Make the PAL run fast!
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Turns on memory leak warning
+  Default is false
+}
+var debugOn : Boolean = false;
+
+{
+  Enable memory leak warning?
+  Automatically enabled if debugOn is true
+  Default is false
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Define automatic show updating values
+  text1Update gets countdown stuff added to it
+  Defaults are for my station
+}
+var text1Update : String = 'Now Playing: Top ten requests countdown';
+var text2Update : String = 'Counting down the top ten requests for the past 7 days';
+var text1Reset : String = 'Now Playing: Regular schedule';
+var text2Reset : String = 'Normal rotation and listener requests';
+
+{
+  Database table name for logging show history
+  Debug table automatically appended with '_debug'
+  Default is 'top_ten_past_7_days' and 'top_ten_past_7_days_debug' for debugOn
+}
+var tableName : String = 'top_ten_requests_past_7_days';
+
+{
+  Define the PAL ids for automated schedule page highlighting
+  Leave this alone if you don't have automated schedule page highlighting
+  Defaults are for my station
+}
+var idThisPAL : Integer = 2;
+var idResetPAL : Integer = 0;
+
+{
+  Define ditty file strings
+  dittyDirectory needs to contain the count down files 10.mp3, 9.mp3, ...
+  Defaults are for my station
+}
+var dittyDirectory : String = 'E:\FesterHead\';
+var dittyStart : String = 'Top ten requests for the week start.mp3';
+var dittyEnd : String = 'Top ten requests for the week end.mp3';
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Declare data sets
+var theTopTenSongs, currentShow : TDataSet;
+
+// Count the actual songs returned.  Not guaranteed to actually have ten songs
+var theActualCount : Integer = 0;
+
+// Initialize song count for countdown mp3 use and history column updating
+var songCount : Integer = 0;
+
+// Initialize for loop counter
+var counter : Integer = 0;
+
+// Initialize selections gatherer
+var selections : String = '';
+
+// selection pipe
+var selectionsPipe : Boolean = false;
+
+// Initialize the counts
+var theCounts : Array of Integer = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+// Initialize error checker
+var hasErrors : Boolean = false;
+
+// Check for intro ditty
+if (not FileExists(dittyDirectory + dittyStart)) then
+  begin
+    ErrorDlg('dittyStart does not exist!');
+    hasErrors := true;
+  end;
+
+// Check for outro ditty
+if (not FileExists(dittyDirectory + dittyEnd)) then
+  begin
+    ErrorDlg('dittyEnd does not exist!');
+    hasErrors := true;
+  end;
+
+// Check for countdown ditties
+for counter := 1 to 10 do
+  begin
+    if (not FileExists(dittyDirectory + IntToStr(counter) + '.mp3')) then
+      begin
+        ErrorDlg(IntToStr(counter) + '.mp3 does not exist!');
+        hasErrors := true;
+      end;    
+  end;
+  
+PAL.UnlockExecution;
+  
+while (not hasErrors) do
+  begin
+    PAL.LockExecution;
+
+    // Calculate start and end ranges
+    var topTenStart : DateTime = date() - 7;
+    var topTenEnd : DateTime = now;
+    
+    WriteLn('Generating top ten requests for:');
+    WriteLn('Start = ' + DateTimeToStr(topTenStart));
+    WriteLn('End = ' + DateTimeToStr(topTenEnd));
+    WriteLn('');
+    
+    // Turn on memory leak?
+    if (debugOn or memoryLeakAlwaysOn) then
+      begin
+        PAL.MemoryLeakWarning := true;
+        WriteLn('Memory leak warning is ON');
+        WriteLn('');
+      end;
+    
+    // Add end ditty and increment the count
+    if (not debugOn) then
+      begin
+        Queue.AddFile(dittyDirectory + dittyEnd, ipTop);
+      end;
+
+    theActualCount := theActualCount + 1;
+    
+    // Build query
+    theTopTenSongs := Query('SELECT songlist.filename, songlist.artist, songlist.title, songlist.id, count(*) AS cnt ' +
+                            'FROM songlist, requestlist ' +
+                            'WHERE songlist.ID = requestlist.songID ' +
+                            'AND songlist.songtype = ''S'' ' +
+                            'AND (requestlist.status = ''played'' or requestlist.status = ''ignored'') ' +
+                            'AND requestlist.t_stamp > ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', topTenStart)) + ' ' +
+                            'AND requestlist.t_stamp < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', topTenEnd)) + ' ' +
+                            'GROUP BY songlist.ID ' +
+                            'ORDER BY cnt DESC, requestlist.t_stamp ASC ' +
+                            'LIMIT 10', [], true);
+    
+    // Move pointer to the first record
+    theTopTenSongs.First;
+    
+    // Add to top of queue in reverse order.  That is add #1 first, then #2, then ...
+    // This will play the top song last
+    while not theTopTenSongs.EOF do
+      begin
+        // Add the song to the top of the queue
+        if (FileExists(theTopTenSongs['filename'])) then
+          begin
+            if (not debugOn) then
+              begin
+                Queue.AddFile(theTopTenSongs['filename'], ipTop);
+              end;
+    
+            theActualCount := theActualCount + 1;
+    
+            // Increment song count
+            songCount := songCount + 1;
+    
+            // Does selections gatherer need a pipe?
+            if (selectionsPipe) then
+              begin
+                selections := selections + '|';
+              end;
+    
+            // Build selections gatherer
+            selections := selections + IntToStr(theTopTenSongs['id']);
+            selectionsPipe := true;
+            
+            // Add the requests count to the array
+            theCounts[songCount - 1] := theTopTenSongs['cnt'];             
+    
+            // Feedback is cool
+            WriteLn('#' + IntToStr(songCount) + ': ' +
+                    '(' + IntToStr(theTopTenSongs['cnt']) + ') ' +
+                    theTopTenSongs['artist'] + ' - ' +
+                    theTopTenSongs['title']);
+          end;
+    
+        // Add the number ditty to the top of the queue
+        if (not debugOn) then
+          begin
+            Queue.AddFile(dittyDirectory + IntToStr(songCount) + '.mp3', ipTop);
+          end;
+
+        theActualCount := theActualCount + 1;
+    
+        // Move pointer to next song data
+        theTopTenSongs.Next;
+      end;
+    
+    // Add start ditty and increment the count
+    if (not debugOn) then
+      begin
+        Queue.AddFile(dittyDirectory + dittyStart, ipTop);
+      end;
+
+    theActualCount := theActualCount + 1;
+    
+    // Log to the database
+    if (debugOn) then
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + '_debug ' +
+                '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                'date DATETIME, ' +
+                'selections TEXT)', []);
+        ExecSQL('INSERT INTO ' + tableName + '_debug (date, selections) VALUES (''' +
+                FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                QuotedStr(selections) + ')', []);
+      end
+    else
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + ' ' +
+                '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                'date DATETIME, ' +
+                'selections TEXT)', []);
+        ExecSQL('INSERT INTO ' + tableName + ' (date, selections) VALUES (''' +
+                FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                QuotedStr(selections) + ')', []);
+      end;
+    
+    WriteLn('');
+    WriteLn('Added ' + IntToStr(theActualCount) + ' songs');
+    WriteLn('');
+    
+    PAL.UnlockExecution;
+    
+    // Wait for 1 song to play before starting the show
+    WriteLn('Waiting for one song to play...');
+    WriteLn('');
+    if (not debugOn) then
+      begin
+        PAL.WaitForPlayCount(1);
+      end;
+      
+    PAL.LockExecution;
+    
+    if (not debugOn) then
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS currentshow ' +
+                '(id MEDIUMINT(9), text1 VARCHAR(255), text2 VARCHAR(255))', []);
+    
+        currentShow := Query('SELECT COUNT(*) AS cnt FROM currentshow', [], true);
+    
+        // If no rows in currentshow, do an insert
+        // Else, do an update
+        if (currentShow['cnt'] = 0) then
+          begin
+            ExecSQL('INSERT INTO currentshow (id, text1, text2) ' +
+                    'VALUES (' + IntToStr(idThisPAL) + ', ' + QuotedStr(text1Update) + ', ' +
+                                 QuotedStr(text2Update) + ')', []);
+          end
+        else
+          begin
+            ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idThisPAL), []);
+            ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Update), []);
+            ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Update), []);
+          end;
+      end;
+    
+    // Wait for the show to end
+    WriteLn('Waiting for ' + IntToStr(theActualCount) + ' songs to play before ending the show.');
+    WriteLn('Update text1Update as we go along.');
+    WriteLn('');
+    
+    PAL.UnlockExecution;
+    
+    // Wait for the intro to play
+    if (not debugOn) then
+      begin
+        PAL.WaitForPlayCount(1);
+      end;
+      
+    PAL.LockExecution;
+      
+    // Update text1 on the fly as songs change
+    for counter := songCount to 1 do
+      begin
+        WriteLn('UPDATE currentshow SET text1 = ''' + text1Update + ' #' + IntToStr(counter) + ' with ' + IntToStr(theCounts[counter - 1]) + ' requests ''');
+        if (not debugOn) then
+          begin
+            ExecSQL('UPDATE currentshow SET text1 = ''' + text1Update + ' #' + IntToStr(counter) + ' with ' + IntToStr(theCounts[counter - 1]) + ' requests ''', []);
+            PAL.WaitForPlayCount(2);
+          end;
+      end;
+    
+    if (not debugOn) then
+      begin
+        ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idResetPAL), []);
+        ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Reset), []);
+        ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Reset), []);
+      end;
+      
+    // Not really an error, but we're pau with the show
+    hasErrors := true;
+    
+    PAL.UnlockExecution;
+  end;  
+
+WriteLn('');
+WriteLn('Show pau');
+
+// Free up data structures
+theTopTenSongs.Free;
+currentShow.Free;
+Queue.Free;
+
+{
+  **************
+  * Change log *
+  **************
+
+  $Log: top-ten-requests-past-7-days.pal,v $
+  Revision 1.10  2005/04/18 03:08:05  FesterHead
+  Added request status check of 'ignored' to account for points and folks being able to request songs without them going into the queue.
+
+  Revision 1.9  2005/01/20 05:26:59  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.8  2005/01/13 07:24:05  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.7  2005/01/11 07:44:48  FesterHead
+  Changed ditty directory
+
+  Revision 1.6  2004/11/11 06:42:29  FesterHead
+  Changed restriction criteria from DESC to ASC
+  Earlier songs are returned before later songs
+
+  Revision 1.5  2004/10/10 03:16:19  FesterHead
+  Separting sections by pipe (|) for real kine now instead of the comma space (, )
+
+  Revision 1.4  2004/09/28 05:29:05  FesterHead
+  Replaced comma/space (, ) separator with a pipe (|).
+
+  Revision 1.3  2004/05/16 05:18:44  FesterHead
+  Whacked outro wait count.
+  The PAL.WaitForPlayCount(2) handles it for free after the number one song plays.
+
+  Revision 1.2  2004/05/16 04:18:48  FesterHead
+  Removed show update toggle.  It's always on.  Deal with it.
+  Removed show history toggle.  It's always on.  Deal with it.
+  Removed intro/outro toggle.  It's always on.  Deal with it.
+  Removed use countdown toggle.  It's always on.  Deal with it.
+  
+  text1 in showhistory gets updated on the fly.
+  Now it's easy to display the top ten count position and the top ten defining criteria.
+  Example:  Now Playing: Top ten listens countdown #10 with 9 requests
+  
+  Now checking for intro, outro and countdown ditties.
+  The PAL will not run if these files aren't available.  Deal with it.
+
+  Revision 1.1  2004/05/15 06:15:25  FesterHead
+  Initial commit - RCS to CVS migration
+
+}
+
+Festerhead Title Changer Script
+{
+  Don't be a loser.  Leave this here.
+
+  Title Changer script by FesterHead (aka Steve Kunitzer)
+  $Id: title-changer.pal,v 1.11 2005/06/10 06:09:35 FesterHead Exp $
+
+  What this PAL does:
+    * Randomly changes your title to help thwart stream rippers
+    * Uses randomly selected song artist - title pairs
+    * As a side effect the stream metadata is foobared
+
+  What is configurable:
+    * Toggle debug
+    * Low and high wait seconds
+
+  PAL built to run continuously:
+    * Switch to a desktop with the 'PAL Scripts' window visible
+      OR
+      Make the ES visible by Clicking the 'Window' menu item and selecting 'PAL Scripts'
+
+    * Click '+' (Add new PAL script)
+
+    * Check the 'Automatically start script' box
+
+    * Click the folder icon and navigate to this script
+
+    * Click 'OK'
+
+    * Highlight PAL and click 'Start selected PAL script' (VCR type play button)
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Keep da bugger goin!
+PAL.Loop := True;
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Turns on memory leak warning
+}
+var debugOn : Boolean = false;
+
+{
+  Turn memory leak warning on even when debugOn is false?
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Define the wait time window
+  waitTimeLow <= waitTimeHigh
+  Not suggested to have low less than 10 nor high more than 50
+  Value is in seconds.
+  Negative or greater than 60 is a recipe for disaster
+}
+var waitTimeLow : Integer = 15;
+var waitTimeHigh : Integer = 45;
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Instantiate a Song Info object
+var Song : TSongInfo;
+
+// Instantiate a DataSet object
+var theTitleChanger : TDataSet;
+
+// Debug or MemoryLeak?
+if (debugOn or memoryLeakAlwaysOn) then
+  begin
+    PAL.MemoryLeakWarning := true;
+    WriteLn('Memory leak warning is ON');
+  end;
+
+// Create and set the Song data
+Song := TSongInfo.Create;
+Song := ActivePlayer.GetSongInfo;
+
+// Change title
+Song := TSongInfo.Create;
+// Grab some data
+
+theTitleChanger := Query('select artist, title from songlist where songtype = ''S'' order by rand() limit 1',[], true);
+
+// Vomit stuff to screen
+WriteLn('Changing title to:');
+WriteLn(theTitleChanger['artist'] + ' - ' + theTitleChanger['title']);
+WriteLn('');
+
+if (not debugOn) then
+  begin
+    Song['artist'] := theTitleChanger['artist'];
+    Song['title'] := theTitleChanger['title'];
+    Encoders.SongChange(Song);
+  end;
+
+// Select random display time based on defined criteria above
+var waitTimeSeconds : Integer = RandomInt(waitTimeLow) + (waitTimeHigh - waitTimeLow);
+
+// Build wait time
+var timeToWait : String = '+00:00:';
+if (waitTimeSeconds < 10) then
+  begin
+    timeToWait := timeToWait + '0' + IntToStr(waitTimeSeconds);
+  end
+else
+  begin
+    timeToWait := timeToWait + IntToStr(waitTimeSeconds);
+  end;
+
+// Vomit to screen
+WriteLn('Waiting for ' + timeToWait + ' seconds to change title');
+WriteLn('');
+
+// Wait
+if (not debugOn) then
+  begin
+    PAL.WaitForTime(timeToWait);
+  end;
+
+PAL.UnlockExecution;
+
+// Be nice.  Release data structures
+Song.Free;
+theTitleChanger.Free;
+
+{
+  *************
+  * Changelog *
+  *************
+
+  $Log: title-changer.pal,v $
+  Revision 1.11  2005/06/10 06:09:35  FesterHead
+  Removed extra table and nonsense phrase and replaced with random songlist selections.
+
+  Revision 1.10  2005/06/05 07:43:13  FesterHead
+  Added nonsense url capabilities.
+  Much cooler and offers more randomness.
+
+  Revision 1.9  2005/02/02 06:14:47  FesterHead
+  Changed current show dataset variable name
+  Changed current show query
+
+  Revision 1.8  2005/01/20 05:27:44  FesterHead
+  Restored header minus PAL discussion blurb
+  Set some defaults to true since that's what I use
+
+  Revision 1.7  2005/01/13 07:24:05  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.6  2004/12/31 05:21:56  FesterHead
+  Added current show display toggle
+
+  Revision 1.5  2004/11/27 06:27:48  FesterHead
+  Oops.  Forgot to reset debugOn to default value.
+
+  Revision 1.4  2004/11/27 06:25:55  FesterHead
+  Updating title only when needed.
+  Checks every 10 seconds while waiting to do dynamic title update.
+  Better handling of requestor display.
+
+  Revision 1.3  2004/11/27 05:02:58  FesterHead
+  Now appending requestor to requests.
+  Cool stuff.
+
+  Revision 1.2  2004/11/11 05:39:49  FesterHead
+  Added database support for storing artists and titles
+  Script will create table if it doesn't exist
+  Script will add a sample row if no data exists
+  debugOn mode enabled by default
+  Now freeing data structures (DOH!)
+
+  Revision 1.1  2004/09/16 01:19:31  FesterHead
+  Initial CVS commit
+
+}
+
+Festerhead Lister Delta Script
+{
+  Don't be a loser.  Leave this here.
+
+  Listener Delta script by FesterHead (aka Steve Kunitzer)
+  $Id: listeners-delta.pal,v 1.3 2005/01/20 05:26:59 FesterHead Exp $
+
+  What this PAL does:
+    * Keeps track of +/- listeners from song start to song end
+
+  What this PAL doesn't do:
+    * Give reasons for +/- listeners
+
+
+  This PAL SHOULD NOT be used solely to determine a "good" or "bad" song
+  Over time, though, a low (-) delta may mean something
+
+  What is configurable:
+    * Toggle debug
+    * Toggle memory leak
+
+  PAL built to run continuously:
+    * Switch to a desktop with the 'PAL Scripts' window visible
+      OR
+      Make the ES visible by Clicking the 'Window' menu item and selecting 'PAL Scripts'
+
+    * Click '+' (Add new PAL script)
+
+    * Check the 'Automatically start script' box
+
+    * Click the folder icon and navigate to this script
+
+    * Click 'OK'
+
+    * Highlight PAL and click 'Start selected PAL script' (VCR type play button)
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Keep da bugger goin!
+PAL.Loop := True;
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Turns on memory leak warning
+  Default is false
+}
+var debugOn : Boolean = false;
+
+{
+  Turn memory leak warning on even when debugOn is false?
+  Default is false
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+var nowPlaying : TDataSet;
+var theSong : TDataSet;
+var theHistoryID : Integer = 0;
+var theSongID : Integer = 0;
+var listenersNow : Integer = 0;
+var listenersLater : Integer = 0;
+var listenersDelta : Integer = 0;
+
+// Select the now playing song from the history list
+nowPlaying := Query('select id, songid, listeners from historylist order by id desc', [], true);
+
+// Gather listeners now
+listenersNow := nowPlaying['listeners'];
+WriteLn('Now ' + IntToStr(listenersNow) + ' listeners');
+
+// Set IDs
+theHistoryID := nowPlaying['id'];
+theSongID := nowPlaying['songid'];
+
+// Wait for song change
+PAL.WaitForPlayCount(1);
+
+// Select the now playing song from the history list
+nowPlaying := Query('select id, listeners from historylist order by id desc', [], true);
+
+// Gather listeners later
+listenersLater := nowPlaying['listeners'];
+WriteLn('Later ' + IntToStr(listenersLater) + ' listeners');
+
+// Calculate delta
+listenersDelta := listenersLater - listenersNow;
+WriteLn('Delta ' + IntToStr(listenersDelta) + ' listeners');
+
+{
+  Make sure historylist has the necessary column
+  This will throw a non-fatal error if the column already exists
+  Error: Duplicate column name 'listeners_delta'
+  No big deal
+}
+ExecSQL('ALTER TABLE historylist ADD listeners_delta mediumint NOT NULL DEFAULT 0', []);
+
+{
+  Make sure songlist has the necessary column
+  This will throw a non-fatal error if the column already exists
+  Error: Duplicate column name 'listeners_delta'
+  No big deal
+}
+ExecSQL('ALTER TABLE songlist ADD listeners_delta mediumint NOT NULL DEFAULT 0', []);
+
+
+// Update historylist
+ExecSQL('update historylist set listeners_delta = ' + IntToStr(listenersDelta) + ' where id = ' + IntToStr(theHistoryID), []);
+
+// Update songlist
+theSong := Query('select listeners_delta from songlist where id = ' + IntToStr(theSongID), [], true);
+ExecSQL('update songlist set listeners_delta = ' + IntToStr(theSong['listeners_delta'] + listenersDelta) + ' where id = ' + IntToStr(theSongID), []);
+
+theSong.Free;
+nowPlaying.Free;
+
+PAL.UnlockExecution;
+
+{
+  *************
+  * Changelog *
+  *************
+
+  $Log: listeners-delta.pal,v $
+  Revision 1.3  2005/01/20 05:26:59  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.2  2005/01/13 07:24:06  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.1  2004/09/17 21:06:17  FesterHead
+  Initial CVS commit
+
+}
+
+Festerhead Category Show Script
+{
+  Don't be a loser.  Leave this here.
+  
+  Category Show script by FesterHead (aka Steve Kunitzer)
+  $Id: category-show.pal,v 1.7 2005/01/25 04:43:23 FesterHead Exp $
+
+  What this PAL does:
+    * Plays songs from a category
+    
+  This is a generic PAL that can be used for many shows.
+  My station uses it for the following:
+    * Get the Led Out Hour
+    * Instrumental Hour
+    * Rush Hour
+    * Is There Anybody Out There?
+    * Guitar Mania!
+    * Number 5
+    * Entry of the Crims
+    
+  In short...  It kicks ass.
+    
+  What is configurable:
+    * Toggle debug mode (ENABLED BY DEFAULT!)
+    * Toggle memory leak warning
+    * Database logging table name
+    * Show updating title, description, and resets
+    * Category to select songs
+    * PAL id for automated schedule highlighting
+    * Use distinct artists, titles, or title/artists
+    * Use SAMs song time limit
+    * Use SAMs artist time limit
+    * Songtype
+    * Show duration
+    * Show padding
+    * Intro, outro, and middle ditties
+    * Number potential candidates to draw from category
+    * Number songs between middle ditties
+
+  Schedule this PAL with SAMs Event Scheduler (ES):
+    * Switch to a desktop with the ES visible
+      OR
+      Make the ES visible by clicking the 'Window' menu item and selecting 'Event Scheduler'
+
+    * Click '+' (Add new scheduled event)
+
+    * Enter a name such as 'Category Show'
+
+    * 'Event action' tab:
+      * Under 'Action' click 'Execute PAL script'
+      * In the 'PAL Script' section, click the folder icon and navigate to this script
+
+    * 'Scheduled times' tab:
+      * For a one time event:
+        * Select the 'Execute one' button
+        * Adjust the date/time
+        * Click '+ Add'
+        * Repeat as necessary for extra one time events
+      * For recurring events:
+        * Select the 'Execute every' button
+        * Adjust date/time
+        * Click '+ Add'
+
+    * Save settings by clicking the 'File' menu item and selecting 'Save Configuration'
+
+  Show your support for the effort, see http://www.festerhead.com/forums/viewtopic.php?t=4
+
+  Mahalo for your kokua
+
+  WARNING!
+  IF YOU DON'T CONFIGURE THE SCRIPT, DON'T EXPECT IT TO WORK PROPERLY!
+  I built this PAL for my station using my station configuration
+  Your results and mileage may vary
+
+  I suggest running the PAL in debugOn mode for a couple days to see if it needs tweaking
+
+  See below for change log
+}
+
+// Make the PAL run fast!
+PAL.LockExecution;
+
+{
+  **************************
+  * START OF CONFIGURABLES *
+  **************************
+}
+
+{
+  Run in debug mode?
+  This will write to the screen without any queue interaction
+  Useful for testing the script settings
+  Don't be a loser.  Test the script with your settings!
+  Turns on memory leak warning
+  Default is false
+}
+var debugOn : Boolean = false;
+
+{
+  Enable memory leak warning?
+  Automatically enabled if debugOn is true
+  Stoping then starting a running script will give false memory leak warnings.
+  To stop/start do one of the following:
+    1.
+      a. Add some spaces to the end of a line
+      b. Save the script
+      c. Compile the script
+      d. Run the script
+    2.
+      a. Remove the script
+      b. Add the script
+      c. Compile the script
+      d. Run the script
+  Default is false
+}
+var memoryLeakAlwaysOn : Boolean = false;
+
+{
+  Define automatic show updating values
+  No show updating when debugOn is true
+  Defaults are for my station
+}
+var text1Update : String = 'Now playing: Category';
+var text2Update : String = 'Playing songs from a category';
+var text1Reset : String = 'Now playing: Regular schedule';
+var text2Reset : String = 'Normal rotation and listener requests';
+
+{
+  What is the name of the category?
+  Default is 'The Category'
+  TODO: Allow an array of strings for multiple categories
+}
+var theCategory : String = 'Category Show';
+
+{
+  Database table name for logging show history
+  Debug table automatically appended with '_debug'
+  Default is 'category_show' and 'category_show_debug' for debugOn
+}
+var tableName : String = 'category_show';
+
+{
+  Define the PAL ids for automated schedule page highlighting
+  No updating when debugOn is true
+  Leave this alone if you don't have automated schedule page highlighting
+}
+var idThisPAL : Integer = 1;
+var idResetPAL : Integer = 0;
+
+{
+  Use distinct artists?
+  If true, then artists won't be duplicated
+  Make sure to have enough distinct artists in the category
+  Spelling counts!
+  Currently case-sensitive!
+  One and only one of useDistinctArtists, useDistinctTitles, useDistinctTitleArtists can be true!
+  Default is false
+}
+var useDistinctArtists : Boolean = false;
+
+{
+  Use distinct titles?
+  If true, then only one song titles won't be duplicated
+  Make sure to have enough distinct titles in the category
+  Spelling counts!
+  Currently case-sensitive!
+  One and only one of useDistinctArtists, useDistinctTitles, useDistinctTitleArtists can be true!  
+  Default is false
+}
+var useDistinctTitles : Boolean = false;
+
+{
+  Use distinct titles by the same artist?
+  If true, then the same song title by the same artist won't be duplicated.
+  However the same artist may be duplicated!
+  Make sure to have enough distinct artists and titles in the category
+  Spelling counts!
+  Currently case-sensitive!
+  One and only one of useDistinctArtists, useDistinctTitles, useDistinctTitleArtists can be true!  
+  Default is true
+}
+var useDistinctTitleArtists : Boolean = true;
+
+{
+  TODO:  Add integer for artist separation count.
+  var artistSepartaion : Integer = 4;
+  
+  What this would do is cause a separation before playing the same artist again.
+  Could be useful when:
+    useDistinctArtists = false
+    useDistinctTitles = true or
+    useDistinctTitleArtists = true
+}
+
+{
+  Use SAMs song time limit?
+  i.e. don't consider recently played songs
+  WARNING!  If true and your song limit is >= 24 hours (1440 minutes)
+            the hours get truncated to 23.  See comment in code below.
+  Default is true
+}
+var useSongTimeLimit : Boolean = true;
+
+{
+  Use SAMs artist time limit?
+  i.e. don't consider recently played artists
+  WARNING!  If true and your artist limit is >= 24 hours (1440 minutes)
+            the hours get truncated to 23.  See comment in code below.  
+  Default is false
+}
+var useArtistTimeLimit : Boolean = false;
+
+{
+  What songtypes to select?
+  Multiple songtypes not supported at this time
+  Default is 'S'
+  TODO: Allow an array of strings for multiple song types
+}
+var songTypeRestrictor : String = 'S';
+
+{
+  How long do you want this PAL to run?
+  Variable is in minutes
+  See padding below
+  Default is 60
+}
+var palDuration : Integer = 60;
+
+{
+  How much padding (on the + side) to give the script?
+  Variable is in minutes
+  Instead of trying to fit exactly palDuration minutes, palDuration + palPadding is ok
+  Default is 10
+}
+var palPadding : Integer = 10;
+
+{
+  How many potential songs to grab?
+  Default is 100
+}
+var numberSongsToGrab : Integer = 100;
+
+{
+  Define ditty file strings
+  Ditties are required
+  Defaults are for my station
+}
+var dittyDirectory : String = 'E:\FesterHead\';
+var dittyStart : String = 'instrumental hour start.mp3';
+var dittyMiddle : String = 'instrumental hour middle.mp3';
+var dittyEnd : String = 'instrumental hour end.mp3';
+
+{
+  How many songs to play before adding a middle ditty?
+  Default is 3
+}
+var addMiddleDitty : Integer = 3;
+
+{
+  Is this cool or what?
+  Default is true
+  var cool : Boolean = true;
+}
+
+{
+  ************************
+  * END OF CONFIGURABLES *
+  ************************
+}
+
+// IF YOU EDIT BELOW HERE, MAKE DARN SURE YOU KNOW WHAT'S GOING ON
+
+// Declare data sets
+var theSongChooser, currentShow, categoryData : TDataSet;
+
+// Initialize error checker
+var hasErrors : Boolean = false;
+
+// Check for intro ditty
+if (not FileExists(dittyDirectory + dittyStart)) then
+  begin
+    ErrorDlg('dittyStart does not exist!');
+    hasErrors := true;
+  end;
+  
+// Check for middle ditty
+if (not FileExists(dittyDirectory + dittyMiddle)) then
+  begin
+    ErrorDlg('dittyMiddle does not exist!');
+    hasErrors := true;
+  end;  
+
+// Check for outro ditty
+if (not FileExists(dittyDirectory + dittyEnd)) then
+  begin
+    ErrorDlg('dittyEnd does not exist!');
+    hasErrors := true;
+  end;
+  
+// Check distinct values
+if ((useDistinctArtists and useDistinctTitles) or
+    (useDistinctTitles and useDistinctTitleArtists) or
+    (useDistinctArtists and useDistinctTitleArtists)) then
+  begin
+    ErrorDlg('One and only one of useDistinctArtists, useDistinctTitles, useDistinctTitleArtists can be true!');
+    hasErrors := true;  
+  end;
+  
+// Initialize duration of show (songs plus ditties)
+var duration : Integer = 0;
+
+// Initialize ditty counter
+var dittyCounter : Integer = 0;
+
+// Count the actual songs
+var theActualCount : Integer = 0;
+
+// SQL restrictions for song and artist
+var sqlRestriction : String = '';
+
+// Song restriction checking
+var songHourRestriction : Float = 0;
+var songMinuteRestriction : Float = 0;
+
+if (useSongTimeLimit) then
+  begin
+    songHourRestriction := Round(Int(PlaylistRules.MinSongTime / 60));
+    songMinuteRestriction := Round(PlaylistRules.MinSongTime - (songHourRestriction * 60));
+    {
+      Temporary hour restriction bug fix
+      PAL cannot encode times greater that 23:59:59
+      If songHourRestriction > 23 then songHourRestriction = 23
+      Some of you folks got some pretty mean song restriction rules!
+      This isn't a critical bug.  It may never get fixed.
+    }
+    if (songHourRestriction > 23) then
+      begin
+        songHourRestriction := 23;
+      end;
+      
+    // SQL restriction
+    sqlRestriction := 'AND date_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(songHourRestriction)+':'+FloatToStr(songMinuteRestriction)+':00'])) + ' ';
+   end;
+   
+// Artist restriction checking
+var artistHourRestriction : Float = 0;
+var artistMinuteRestriction : Float = 0;
+
+if (useArtistTimeLimit) then
+  begin
+    artistHourRestriction := Round(Int(PlaylistRules.MinArtistTime / 60));
+    artistMinuteRestriction := Round(PlaylistRules.MinArtistTime - (artistHourRestriction * 60));
+    {
+      Temporary hour restriction bug fix
+      PAL cannot encode times greater that 23:59:59
+      If artistHourRestriction > 23 then artistHourRestriction = 23
+      Some of you folks got some pretty mean artist restriction rules!
+      This isn't a critical bug.  It may never get fixed.
+    }
+    if (artistHourRestriction > 23) then
+      begin
+        artistHourRestriction := 23;
+      end;
+      
+    // SQL restriction
+    sqlRestriction := sqlRestriction + 'AND date_artist_played < ' + QuotedStr(FormatDateTime('yyyy-mm-dd hh:mm:ss', T['-'+FloatToStr(artistHourRestriction)+':'+FloatToStr(artistMinuteRestriction)+':00'])) + ' ';
+   end;   
+   
+// SQL group by
+var sqlGroupBy : String = '';
+
+if (useDistinctArtists) then
+  begin
+    sqlGroupBy := 'GROUP BY songlist.artist ';
+  end;
+  
+if (useDistinctTitles) then
+  begin
+    sqlGroupBy := 'GROUP BY songlist.title ';
+  end;
+  
+if (useDistinctTitleArtists) then
+  begin
+    sqlGroupBy := 'GROUP BY songlist.title, songlist.artist ';
+  end;  
+
+// Initialize wait string.  Starts with + because this is a timed wait
+var theTimeToWait : String = '+';
+
+// Initialize selections gatherer
+var selections : String = '';
+
+var doneGathering : Boolean = false;
+
+// selection pipe
+var selectionsPipe : Boolean = false;
+  
+PAL.UnlockExecution;
+  
+while (not hasErrors) do
+  begin
+    PAL.LockExecution;
+    
+    // Turn on memory leak?
+    if (debugOn or memoryLeakAlwaysOn) then
+      begin
+        PAL.MemoryLeakWarning := true;
+        WriteLn('Memory leak warning is ON');
+        WriteLn('');
+      end;
+    
+    // Add end ditty
+    if (not debugOn) then
+      begin
+        Queue.AddFile(dittyDirectory + dittyEnd, ipTop);
+      end;
+    
+    theActualCount := theActualCount + 1;
+    
+    // Determine the category ID
+    categoryData := Query('SELECT id FROM category WHERE name = ' + QuotedStr(theCategory), [], true);
+    
+    // Get 100 random songs from the category
+    theSongChooser := Query('SELECT songlist.id, songlist.filename, songlist.duration, songlist.title, songlist.album, songlist.artist ' +
+                            'FROM songlist, categorylist ' +
+                            'WHERE songlist.id = categorylist.songid ' +
+                            'AND categorylist.categoryid = ' + IntToStr(categoryData['id']) + ' ' +
+                            sqlRestriction + ' ' +
+                            'AND songlist.songtype = ' + QuotedStr(songTypeRestrictor) + ' ' +
+                            sqlGroupBy + ' ' + 
+                            'ORDER BY RAND() LIMIT ' + IntToStr(numberSongsToGrab), [], true);
+    
+    theSongChooser.First;
+    
+    while ((duration < (palDuration * 60000)) or (not theSongChooser.EOF)) do
+      begin
+        if ((duration + theSongChooser['duration']) < ((palDuration + palPadding) * 60000)) then
+          begin
+            WriteLn(theSongChooser['artist'] + ' *** ' + theSongChooser['title'] + ' ***from*** ' + theSongChooser['album']);
+    
+            if (not debugOn) then
+              begin
+                Queue.AddFile(theSongChooser['filename'], ipTop);
+              end;
+    
+            theActualCount := theActualCount + 1;
+    
+            duration := duration + StrToInt(theSongChooser['duration']);
+    
+            // Does selections gatherer need a pipe?
+            if (selectionsPipe) then
+              begin
+                selections := selections + '|';
+              end;
+    
+            // Build selections gatherer
+            selections := selections + IntToStr(theSongChooser['id']);
+            selectionsPipe := true;
+    
+            // See if we need to put in a ditty
+            dittyCounter := dittyCounter + 1;
+            if ((dittyCounter = addMiddleDitty) and (duration < (palDuration * 60000))) then
+              begin
+                dittyCounter := 0;
+                if (not debugOn) then
+                  begin
+                    Queue.AddFile(dittyDirectory + dittyMiddle, ipTop);
+                  end;
+    
+                theActualCount := theActualCount + 1;
+              end;
+          end;
+        theSongChooser.Next;
+      end;
+    
+    // Add start ditty
+    if (not debugOn) then
+      begin
+        Queue.AddFile(dittyDirectory + dittyStart, ipTop);
+      end;
+    
+    theActualCount := theActualCount + 1;
+    
+    // Create show history tables
+    if (debugOn) then
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + '_debug ' +
+                '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                'date DATETIME, ' +
+                'selections TEXT)', []);
+        ExecSQL('INSERT INTO ' + tableName + '_debug (date, selections) VALUES (''' +
+                FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                QuotedStr(selections) + ')', []);
+      end
+    else
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS ' + tableName + ' ' +
+                '(id MEDIUMINT(9) AUTO_INCREMENT PRIMARY KEY, ' +
+                'date DATETIME, ' +
+                'selections TEXT)', []);
+        ExecSQL('INSERT INTO ' + tableName + ' (date, selections) VALUES (''' +
+                FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ''', ' +
+                QuotedStr(selections) + ')', []);
+      end;
+    
+    PAL.UnlockExecution;
+    
+    // Wait for 1 song to play before starting the show
+    WriteLn('');
+    WriteLn('Waiting for one song to play before starting the show...');
+    if (not debugOn) then
+      begin
+        PAL.WaitForPlayCount(1);
+      end;
+      
+    PAL.LockExecution;
+    
+    if (not debugOn) then
+      begin
+        // Create the table if it doesn't already exist
+        ExecSQL('CREATE TABLE IF NOT EXISTS currentshow ' +
+                '(id MEDIUMINT(9), text1 VARCHAR(255), text2 VARCHAR(255))', []);
+    
+        currentShow := Query('SELECT COUNT(*) AS cnt FROM currentshow', [], true);
+    
+        // If no rows in currentshow, do an insert
+        // Else, do an update
+        if (currentShow['cnt'] = 0) then
+          begin
+            ExecSQL('INSERT INTO currentshow (id, text1, text2) ' +
+                    'VALUES (' + IntToStr(idThisPAL) + ', ' + QuotedStr(text1Update) + ', ' +
+                                 QuotedStr(text2Update) + ')', []);
+          end
+        else
+          begin
+            ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idThisPAL), []);
+            ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Update), []);
+            ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Update), []);
+          end;
+      end;
+      
+    PAL.UnlockExecution;
+    
+    // Wait for the show to end
+    WriteLn('Waiting for ' + IntToStr(theActualCount) + ' songs to play before ending the show...');
+    WriteLn('');
+    if (not debugOn) then
+      begin
+        PAL.WaitForPlayCount(theActualCount);
+      end;
+      
+    PAL.LockExecution;
+    
+    if (not debugOn) then
+      begin
+        ExecSQL('UPDATE currentshow SET id = ' + IntToStr(idResetPAL), []);
+        ExecSQL('UPDATE currentshow SET text1 = ' + QuotedStr(text1Reset), []);
+        ExecSQL('UPDATE currentshow SET text2 = ' + QuotedStr(text2Reset), []);
+      end;
+
+    // Not really an error, but we're pau with the show
+    hasErrors := true;
+    
+    PAL.UnlockExecution;      
+  end;
+
+WriteLn('');
+WriteLn('Show pau');
+
+theSongChooser.Free;
+categoryData.Free;
+currentShow.Free;
+Queue.Free;
+
+{
+  **************
+  * Change log *
+  **************
+
+  $Log: category-show.pal,v $
+  Revision 1.7  2005/01/25 04:43:23  FesterHead
+  Set debugOn to false by default
+
+  Revision 1.6  2005/01/25 04:39:23  FesterHead
+  Changed middle ditty level to 3 from 5
+
+  Revision 1.5  2005/01/20 05:26:59  FesterHead
+  Restored header minus PAL discussion blurb
+
+  Revision 1.4  2005/01/13 07:24:06  FesterHead
+  Shortened header to just id and change log pointer
+
+  Revision 1.3  2005/01/11 07:44:48  FesterHead
+  Changed ditty directory
+
+  Revision 1.2  2004/10/20 04:41:31  FesterHead
+  Added comments in configurable section for future enhancements
+
+  Revision 1.1  2004/10/14 05:37:55  FesterHead
+  Initial CVS commit
+
+}
+16
+
+

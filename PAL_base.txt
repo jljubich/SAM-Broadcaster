@@ -1,0 +1,261 @@
+PAL built in functions, classes, types and constants
+====================================================
+
+More documentation is available at:
+http://www.dwscript.com/libdocu/LibDocu.html
+Please not that not all of these units are available in PAL.
+
+
+Unit: unVCLGUIFunctions
+=======================
+
+procedure ShowMessage(Msg : String);
+function InputBox(Caption : String; Prompt : String; Def : String):String;
+procedure ErrorDlg(Msg : String);
+procedure InformationDlg(Msg : String);
+function QuestionDlg(Msg : String):Boolean;
+function OkCancelDlg(Msg : String):Boolean;
+
+####################################################
+
+
+Unit: dws2FileFunctions
+=======================
+
+procedure SaveStringToFile(Filename : String; Data : String);
+function LoadStringFromFile(Filename : String):String;
+procedure AppendStringToFile(Filename : String; Data : String);
+function FileExists(Filename : String):Boolean;
+function DeleteFile(Filename : String):Boolean;
+function RenameFile(OldName : String; NewName : String):Boolean;
+procedure ChDir(NewDir : String);
+function CreateDir(Dir : String):Boolean;
+function RemoveDir(Dir : String):Boolean;
+function GetCurrentDir:String;
+function SetCurrentDir(Dir : String):Boolean;
+function FileSearch(Name : String; DirList : String):String;
+function ExtractFileDrive(FileName : String):String;
+function ExtractFileDir(FileName : String):String;
+function ExtractFileName(FileName : String):String;
+function ExtractFilePath(FileName : String):String;
+function ExtractFileExt(FileName : String):String;
+function ChangeFileExt(FileName : String; Ext : String):String;
+
+
+####################################################
+
+
+
+Unit: dws2MathFunctions
+=======================
+
+function Sin(a : Float):Float;
+function Sinh(a : Float):Float;
+function Cos(a : Float):Float;
+function Cosh(a : Float):Float;
+function Tan(a : Float):Float;
+function Tanh(a : Float):Float;
+function ArcSin(a : Float):Float;
+function ArcSinh(a : Float):Float;
+function ArcCos(a : Float):Float;
+function ArcCosh(a : Float):Float;
+function ArcTan(a : Float):Float;
+function ArcTanh(a : Float):Float;
+function Cotan(a : Float):Float;
+function Hypot(x : Float; y : Float):Float;
+
+function Inc(var a : Integer; b : Integer):Float;
+function Abs(a : Float):Float;
+function Exp(a : Float):Float;
+function Ln(a : Float):Float;
+function Log2(a : Float):Float;
+function Log10(a : Float):Float;
+function LogN(n : Float; x : Float):Float;
+
+function Sqrt(v : Float):Float;
+function Sqr(v : Float):Float;
+function Int(v : Float):Float;
+function Frac(v : Float):Float;
+function Trunc(v : Float):Float;
+function Round(v : Float):Float;
+function Power(base : Float; exponent : Float):Float;
+
+function DegToRad(v : Float):Float;
+function RadToDeg(v : Float):Float;
+function Max(v1 : Float; v2 : Float):Float;
+function Min(v1 : Float; v2 : Float):Float;
+function Pi:Float;
+function Random:Float;
+function RandomInt(Range : Integer):Integer;
+procedure Randomize;
+
+function RandG(mean : Float; stdDev : Float):Float;
+function RandSeed:Integer;
+function SetRandSeed(Seed:Integer);
+
+
+
+
+####################################################
+
+
+
+Unit: dws2StringFunctions
+=========================
+
+function IntToStr(v : Integer):String;
+function StrToInt(str : String):Integer;
+function StrToIntDef(str : String; Def : Integer):Integer;
+function IntToHex(v : Integer; Digits : Integer):Integer;
+function FloatToStr(v : Float):String;
+function StrToFloat(str : String):Float;
+function StrToFloatDef(str : String; Def :Float):Float;
+function Chr(x : Integer):String;
+function Ord(s : String):String; 
+function CharAt(s : String; x : Integer):String;
+procedure SetCharAt(var S : String; x : Integer; c : String);
+procedure Delete(var S : String; Index : Integer; Len : Integer);
+procedure Insert(src : String; var Dest : String; Index : Integer);
+function LowerCase(Str : String):String;
+function AnsiLowerCase(Str : String):String;
+function UpperCase(Str : String):String;
+function AnsiUpperCase(Str : String):String;
+function Pos(SubStr : String; Str : string):Integer;
+function Length(Str : String):Integer;
+function TrimLeft(Str : String):String;
+function TrimRight(Str : String):String;
+function Trim(Str : String):String;
+function CompareText(Str1 : String; Str2 : String):Integer;
+function AnsiCompareText(Str1 : String; Str2 : String):Integer;
+function CompareStr(Str1 : String; Str2 : String):Integer;
+function AnsiCompareStr(Str1 : String; Str2 : String):Integer;
+function IsDelimiter(delims : String; s : String; Index : Integer):Boolean;
+function LastDelimiter(delims : String; s : String):Boolean;
+function QuotedStr(Str : String):String;
+
+
+####################################################
+
+
+
+Unit: dws2TimeFunctions
+=======================
+
+function Now: DateTime;
+function Date: DateTime;
+function Time: DateTime;
+function DateTimeToStr(dt: DateTime):string;
+function StrToDateTime(str : String): DateTime;
+function DateToStr(Date: DateTime):String	;
+function StrToDate(Str : String): DateTime;
+function TimeToStr(Time : DateTime):String;
+function StrToTime(Str : String): DateTime;
+function DayOfWeek(dt : DateTime):Integer;
+function FormatDateTime(Format : String; dt : DateTime):String;
+function IsLeapYear(Year : Integer):Boolean;
+function IncMonth(dt : DateTime; nm : Integer):DateTime;
+procedure DecodeDate(dt : DateTime; var yy,mm,dd : Integer);
+function EncodeDate(yy, mm, dd : Integer):DateTime;
+procedure DecodeTime(dt : DateTime; var hh, mm, ss, ms : Integer);
+function EncodeTime(hh, mm, ss, ms : Integer):DateTime;
+
+
+
+####################################################
+
+
+
+Unit: dws2GlobalVarsFunctions
+=============================
+
+function ReadGlobalVar(Name : String):Variant;
+function ReadGlobalVarDef(Name : String; Def : Variant):Variant;
+function WriteGlobalVar(Name : String; Val : Variant);
+procedure CleanupGlobalVars;
+
+
+####################################################
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+General expresions & syntax
+
+Declaring variables:
+
+const A = 'Hello world!';
+const A = 123;
+
+
+var V : Integer;
+var V : String;
+var V : Array[1..5] of Integer;
+var V : Array of Integer;
+var V : TMyClass;
+
+var V : Integer = 1;
+var V : String = 'Hello world!';
+
+
+Math:
+m := a + b;
+m := a - b;
+m := a * b;
+m := a / b; {Float only}
+m := a div b; {Integer only; Discards remainder}
+m := a mod b; Integer only; Only remainder}
+m := -m;
+
+Logic:
+not a
+a or b
+a and b
+a xor b
+a < b
+a <= b
+a > b
+a >= b
+a <> b
+a = b
+	
+
+
+Casting:
+float(x)
+TDateTime(x)
+
+Type checking:
+a is TMyClass
+a as TMyClass
+
+Selection:
+
+if ({logic expression} then
+ {Do stuff}
+else
+ {Do stuff};
+
+case {Value} of
+ 1    : {Do stuff}
+ 2..4 : {Do stuff}
+ else {Do stuf}
+end;
+
+
+Loops:
+
+var C : Integer;
+For C := A to B do
+ begin
+   {Do stuff}
+ end;
+
+while ({Logic expresion is True}) do
+ begin
+  {Do stuff}
+ end;
+
+repeat
+until ({Logic expresion is True});
+
+
+####################################################
